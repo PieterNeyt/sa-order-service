@@ -18,12 +18,12 @@ public class Client {
     public String lastName;
     public String email;
     public String phoneNumber;
-    public String address;
+    public Address address;
     public Date birthDate;
 
     public List<OrderOccasion> orderOccasions;
 
-    public Client(String address, Date birthDate, String email, String firstName, String lastName, String phoneNumber) {
+    public Client(Address address, Date birthDate, String email, String firstName, String lastName, String phoneNumber) {
         this.address = address;
         this.birthDate = birthDate;
         this.email = email;
