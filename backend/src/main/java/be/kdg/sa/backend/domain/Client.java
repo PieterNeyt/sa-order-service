@@ -24,6 +24,7 @@ public class Client {
     public List<OrderOccasion> orderOccasions;
 
     public Client(Address address, Date birthDate, String email, String firstName, String lastName, String phoneNumber) {
+        this.clientId = UUID.randomUUID();
         this.address = address;
         this.birthDate = birthDate;
         this.email = email;

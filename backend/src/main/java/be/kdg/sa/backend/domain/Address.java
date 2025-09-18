@@ -18,6 +18,7 @@ public class Address {
     public String country;
 
     public Address(String city, String streetNumber, String street, String postalCode, String country) {
+       this.addressId = UUID.randomUUID();
         this.city = city;
         StreetNumber = streetNumber;
         this.street = street;
