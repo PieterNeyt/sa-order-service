@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -12,6 +13,7 @@ import java.util.List;
 @ToString
 public class Order {
     public OrderOccasion orderOccasion;
+    public UUID orderId;
     //public List<Dish> dishes
 
 
