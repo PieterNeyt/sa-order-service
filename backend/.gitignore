@@ -1,16 +1,27 @@
-HELP.md
+### Build tools ###
 .gradle
 build/
-!../gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### STS ###
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+### STS (Spring Tool Suite) ###
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 bin/
@@ -18,7 +29,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -35,3 +46,26 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### OS-specific ###
+.DS_Store
+Thumbs.db
+
+### Logs and temp files ###
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+
+### Java specific ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Spring Boot ###
+*.db
+*.h2.db
+*.mv.db
+*.trace.db
