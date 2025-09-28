@@ -32,15 +32,24 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.jmolecules.integrations:jmolecules-starter-ddd:0.29.0")
+    implementation("org.jspecify:jspecify:1.0.0")
+    implementation("org.postgresql:postgresql")
+
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    runtimeOnly("com.h2database:h2")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.jmolecules.integrations:jmolecules-starter-test:0.29.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("org.jspecify:jspecify:1.0.0")
-
 }
+
 
 
 tasks.withType<Test> {

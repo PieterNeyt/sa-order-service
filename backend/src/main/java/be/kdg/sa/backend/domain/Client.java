@@ -21,7 +21,7 @@ public class Client {
     public Address address;
     public Date birthDate;
 
-    public List<OrderOccasion> orderOccasions;
+    public List<Order> orders = new ArrayList<>();
 
     public Client(Address address, Date birthDate, String email, String firstName, String lastName, String phoneNumber) {
         this.clientId = UUID.randomUUID();
@@ -31,6 +31,5 @@ public class Client {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.orderOccasions = new ArrayList<>();
     }
 }

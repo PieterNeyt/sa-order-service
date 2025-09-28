@@ -3,7 +3,10 @@ package be.kdg.sa.backend.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,13 +15,30 @@ import java.util.UUID;
 @Setter
 @ToString
 public class Order {
-    public OrderOccasion orderOccasion;
-    public UUID orderId;
-    //public List<Dish> dishes
+    private final OrderId orderId;
+    private final ClientId clientId;
+    private final RestaurantId restaurantId;
+    private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
-    public Order(OrderOccasion orderOccasion) {
-        this.orderOccasion = orderOccasion;
-        // lijst met dishes moet hier ook
+    public Order(RestaurantId restaurantId) {
+        Assert.notNull(restaurantId, "restaurantId must not be null");
+        this.restaurantId = restaurantId;
+        this.orderId = OrderId.create();
+        this.clientId = ClientId.create();
+    }
+
+
+    private void addDish(final DishId dishId,final RestaurantId restaurantId,final BigDecimal price,int quantity) {
+        Assert.isTrue(this.restaurantId.id() != restaurantId.id(), "All items in shopping cart must be from same restaurant");
+
+        final var existingShoppingCart = shoppingCart.stream()
+                .filter(sc -> sc.isForDishWithPrice(dishId,price))
+                .findFirst();
+
+        existingShoppingCart.ifPresentOrElse(
+                shoppingCart -> shoppingCart.addQuantity(quantity),
+                () -> shoppingCart.add(new OrderLine(dishId,price,quantity))
+        );
     }
 }
