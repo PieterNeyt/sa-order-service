@@ -21,16 +21,23 @@ public class Order {
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
-    public Order(RestaurantId restaurantId) {
+    public Order(RestaurantId restaurantId, ClientId clientId) {
         Assert.notNull(restaurantId, "restaurantId must not be null");
         this.restaurantId = restaurantId;
         this.orderId = OrderId.create();
-        this.clientId = ClientId.create();
+        this.clientId = clientId;
+    }
+
+    public Order(OrderId orderId,RestaurantId restaurantId, ClientId clientId) {
+        Assert.notNull(restaurantId, "restaurantId must not be null");
+        this.restaurantId = restaurantId;
+        this.orderId = orderId;
+        this.clientId = clientId;
     }
 
 
-    private void addDish(final DishId dishId,final RestaurantId restaurantId,final BigDecimal price,int quantity) {
-        Assert.isTrue(this.restaurantId.id() != restaurantId.id(), "All items in shopping cart must be from same restaurant");
+    public void addDish(final DishId dishId, final RestaurantId restaurantId, final BigDecimal price, int quantity) {
+        Assert.isTrue(this.restaurantId.id().equals(restaurantId.id()), "All items in shopping cart must be from same restaurant");
 
         final var existingShoppingCart = shoppingCart.stream()
                 .filter(sc -> sc.isForDishWithPrice(dishId,price))

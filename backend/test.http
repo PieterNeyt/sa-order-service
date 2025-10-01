@@ -1,0 +1,25 @@
+### Step 1: Create a new order or use a dummy order
+POST http://localhost:9090/api/order/00000000-0000-0000-0000-000000000000/shoppingCart/
+Content-Type: application/json
+
+{
+  "dishId": "11111111-1111-1111-1111-111111111111",
+  "quantity": 2
+}
+
+> {% client.global.set("orderId", response.body.orderId); %}
+
+### Step 2: Add another dish using the saved orderId
+POST http://localhost:9090/api/order/{{orderId}}/shoppingCart/
+Content-Type: application/json
+
+{
+  "dishId": "22222222-2222-2222-2222-222222222222",
+  "quantity": 1
+}
+
+
+### Step 3: get ShoppingCart
+GET http://localhost:9090/api/order/{{orderId}}/shoppingCart/
+Content-Type: application/json
+ACCEPT: application/json

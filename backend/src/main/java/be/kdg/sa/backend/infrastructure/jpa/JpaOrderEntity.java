@@ -1,11 +1,66 @@
 package be.kdg.sa.backend.infrastructure.jpa;
 
-import jakarta.persistence.Table;
+import be.kdg.sa.backend.domain.*;
+import jakarta.persistence.*;
 import lombok.Getter;
-import org.jmolecules.ddd.annotation.Entity;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
-@Table(name="order")
+@Setter
+@Table(name="orders")
 public class JpaOrderEntity {
+    @Id
+    private UUID orderId;
+    @Column(nullable = false)
+
+    private UUID clientId;
+    @Column(nullable = false)
+
+    private UUID restaurantId;
+    @Column(nullable = false)
+
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL ,fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<JpaOrderLineEntity> shoppingCart;
+
+    public JpaOrderEntity() {}
+
+    public JpaOrderEntity(UUID orderId, UUID clientId, UUID restaurantId) {
+        this.orderId = orderId;
+        this.clientId = clientId;
+        this.restaurantId = restaurantId;
+        this.shoppingCart = new ArrayList<>();
+    }
+    public static JpaOrderEntity fromDomain(Order order) {
+        JpaOrderEntity orderEntity = new JpaOrderEntity(
+                order.getOrderId().id(),
+                order.getClientId().id(),
+                order.getRestaurantId().id()
+        );
+        List<JpaOrderLineEntity> orderLines = order.getShoppingCart().stream()
+                .map(orderLine -> JpaOrderLineEntity.fromDomain(orderLine,order.getOrderId().id()))
+                .toList();
+        orderEntity.setLines(orderLines);
+        return orderEntity;
+    }
+    public Order toDomain() {
+        Order order = new Order(new OrderId(orderId),
+                new RestaurantId(restaurantId),
+                new ClientId(clientId));
+        shoppingCart.forEach(orderLine -> order.addDish(
+               new DishId(orderLine.getId().getDishId()),
+                order.getRestaurantId(),
+                orderLine.getPrice(),
+                orderLine.getQuantity()
+        ));
+        return order;
+    }
+    public void setLines(List<JpaOrderLineEntity> lines) {
+        this.shoppingCart = lines;
+        this.shoppingCart.forEach(line -> line.setOrder(this));
+    }
 }

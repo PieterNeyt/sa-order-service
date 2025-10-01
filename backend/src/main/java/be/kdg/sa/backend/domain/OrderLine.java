@@ -29,7 +29,7 @@ public class OrderLine {
         Assert.isTrue(quantity > 0, "quantity must be greater than 0");
     }
     public void validatePrice(BigDecimal price) {
-        Assert.isTrue(price.compareTo(BigDecimal.ZERO)<=0, "price must be greater than 0");
+        Assert.isTrue(price.compareTo(BigDecimal.ZERO)>0, "price must be greater than 0");
     }
 
     public boolean isForDishWithPrice(DishId dishId, BigDecimal price) {
