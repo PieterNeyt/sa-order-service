@@ -18,6 +18,7 @@ public class Order {
     private final OrderId orderId;
     private final ClientId clientId;
     private final RestaurantId restaurantId;
+    private final OrderState orderState;
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
@@ -26,9 +27,11 @@ public class Order {
         this.restaurantId = restaurantId;
         this.orderId = OrderId.create();
         this.clientId = clientId;
+        this.orderState = OrderState.NOT_PLACED;
     }
 
-    public Order(OrderId orderId,RestaurantId restaurantId, ClientId clientId) {
+    public Order(OrderId orderId, RestaurantId restaurantId, ClientId clientId, OrderState orderState) {
+        this.orderState = orderState;
         Assert.notNull(restaurantId, "restaurantId must not be null");
         this.restaurantId = restaurantId;
         this.orderId = orderId;

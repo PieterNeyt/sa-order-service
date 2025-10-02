@@ -1,0 +1,177 @@
+/* Body & Navbar */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #00c4a7;
+    padding: 10px 20px;
+    color: white;
+}
+
+.navbar .logo {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.navbar .nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-btn {
+    background-color: white;
+    color: #00c4a7;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Restaurant header */
+.restaurant-header {
+    text-align: center;
+    padding: 20px;
+    background-color: #e0f4f0;
+}
+
+.restaurant-header h1 {
+    margin: 0;
+    color: #00c4a7;
+}
+
+.restaurant-header p {
+    margin: 5px 0 0 0;
+    color: #333;
+}
+
+/* Layout */
+.restaurant-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Menu column (3/4) */
+.menu-column {
+    flex: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.menu-item {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.menu-info {
+    padding: 10px;
+    flex: 1;
+}
+
+.menu-info h3 {
+    margin: 0 0 5px 0;
+}
+
+.menu-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.menu-price {
+    color: #00c4a7;
+    font-weight: bold;
+}
+
+.add-btn {
+    background-color: #00c4a7;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.add-btn:hover {
+    background-color: #00a58c;
+}
+
+/* Cart column (1/4) */
+.cart-column {
+    flex: 1;
+    background-color: white;
+    border-radius: 12px;
+    padding: 15px;
+    height: fit-content;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.cart-column h2 {
+    margin-top: 0;
+    color: #00c4a7;
+}
+
+.cart-items {
+    min-height: 200px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin: 10px 0;
+    padding: 10px 0;
+}
+
+.cart-total {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.checkout-btn {
+    width: 100%;
+    background-color: #00c4a7;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.checkout-btn:hover {
+    background-color: #00a58c;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .restaurant-container {
+        flex-direction: column;
+    }
+    .menu-column {
+        grid-template-columns: 1fr;
+    }
+}

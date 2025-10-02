@@ -1,23 +1,75 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-      <script type="module" src="/src/main.ts"></script>
-      <title>Vite + TS</title>
-  </head>
-  <body>
-  <table>
-      <thead>
-      <tr>
-          <th>id</th>
-          <th>Name</th>
-          <th>Description</th>
-      </tr>
-      </thead>
-      <tbody id="tests">
+    <title>Restaurant Selector</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">Foodie</div>
+    <div class="nav-links">
+        <a href="#restaurants">Restaurants</a>
+        <button class="login-btn">Inloggen</button>
+    </div>
+</nav>
 
-      </tbody>
-  </table>
+<h1 id="restaurants">Choose a Restaurant</h1>
+<div class="restaurant-list">
+    <!-- Elke restaurant is nu een link -->
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/sushi.jpg" alt="Sushi Palace Logo" />
+        <div class="card-content">
+            <h2>Sushi Palace</h2>
+            <p class="price">$$$</p>
+            <p class="status open">Open Now</p>
+        </div>
+    </a>
 
-  </body>
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/burger.jpg" alt="Burger King Logo" />
+        <div class="card-content">
+            <h2>Burger King</h2>
+            <p class="price">$</p>
+            <p class="status closed">Closed</p>
+        </div>
+    </a>
+
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/pizza.jpg" alt="Pizza Heaven Logo" />
+        <div class="card-content">
+            <h2>Pizza Heaven</h2>
+            <p class="price">$$</p>
+            <p class="status open">Open Now</p>
+        </div>
+    </a>
+
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/taco.jpg" alt="Taco Town Logo" />
+        <div class="card-content">
+            <h2>Taco Town</h2>
+            <p class="price">$</p>
+            <p class="status open">Open Now</p>
+        </div>
+    </a>
+
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/pasta.jpg" alt="Pasta Paradise Logo" />
+        <div class="card-content">
+            <h2>Pasta Paradise</h2>
+            <p class="price">$$</p>
+            <p class="status closed">Closed</p>
+        </div>
+    </a>
+
+    <a href="restaurantPage.html" class="card">
+        <img src="logos/curry.jpg" alt="Curry House Logo" />
+        <div class="card-content">
+            <h2>Curry House</h2>
+            <p class="price">$$</p>
+            <p class="status open">Open Now</p>
+        </div>
+    </a>
+</div>
+</body>
 </html>

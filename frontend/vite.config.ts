@@ -3,6 +3,12 @@ import { defineConfig } from "vite";
 export default defineConfig({
     base: "./",
     build: {
+        rollupOptions: {
+            input: {
+                main: 'index.html',
+                restaurant: 'restaurantPage.html'
+            }
+        }
        // outDir: "../backend/src/main/resources/static",
     },
     // to deal with deprecation warnings until bootstrap moves to @use with v6(?)
