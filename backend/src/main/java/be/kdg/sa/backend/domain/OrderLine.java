@@ -11,9 +11,11 @@ import java.math.BigDecimal;
 public class OrderLine {
     private final DishId dishId;
     private final BigDecimal price;
+    private final String name;
     private int quantity;
 
-    public OrderLine(DishId dishId, BigDecimal price, int quantity) {
+    public OrderLine(DishId dishId, BigDecimal price, int quantity,String name) {
+        this.name = name;
         Assert.notNull(dishId, "dishId must not be null");
         this.dishId = dishId;
 

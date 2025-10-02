@@ -1,5 +1,6 @@
 import "./css/style.css"
 import "./css/restaurant.css"
-import {setupDishes} from "./ts/domain/OrderLine"
+import {showDishes, showRestaurants} from "./ts/presenter.ts";
 
-setupDishes()
+showRestaurants()
+showDishes()

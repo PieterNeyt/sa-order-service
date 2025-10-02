@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure.jpa;
+package be.kdg.sa.backend.infrastructure.order.jpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

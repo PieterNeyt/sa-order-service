@@ -22,7 +22,7 @@ public class OrderController {
 
     @PostMapping("/{orderId}/shoppingCart/")
     public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId, @RequestBody OrderDto.OrderLineDto orderDto) {
-        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT);
+        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name());
         return ResponseEntity.ok(OrderDto.from(order));
     }
     @GetMapping("/{orderId}/shoppingCart/")

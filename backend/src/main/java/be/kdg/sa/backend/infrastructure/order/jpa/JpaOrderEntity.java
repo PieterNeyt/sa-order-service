@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure.jpa;
+package be.kdg.sa.backend.infrastructure.order.jpa;
 
 import be.kdg.sa.backend.domain.*;
 import jakarta.persistence.*;
@@ -62,7 +62,8 @@ public class JpaOrderEntity {
                new DishId(orderLine.getId().getDishId()),
                 order.getRestaurantId(),
                 orderLine.getPrice(),
-                orderLine.getQuantity()
+                orderLine.getQuantity(),
+                orderLine.getName()
         ));
         return order;
     }

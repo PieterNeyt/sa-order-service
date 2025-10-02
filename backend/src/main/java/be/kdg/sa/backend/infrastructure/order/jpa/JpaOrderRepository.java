@@ -1,6 +1,5 @@
-package be.kdg.sa.backend.infrastructure.jpa;
+package be.kdg.sa.backend.infrastructure.order.jpa;
 
-import be.kdg.sa.backend.domain.OrderRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

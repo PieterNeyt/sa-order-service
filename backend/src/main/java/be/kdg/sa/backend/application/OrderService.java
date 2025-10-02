@@ -20,12 +20,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId) {
-        /*TODO : via Rabbit na kijken of de dish wel bestaat
-            - krijg je confirmatie dat de dish bestaat
-            - Prijs van de dish krijgen
-            - Restaurant Id van krijgen
-        */
+    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name/*,UUID restaurantId*/) {
         RestaurantId restaurantId = new RestaurantId(RESTAURANT_ID);
         //check of al een order bestaat
         Order order = this.orderRepository.findById(orderId)
@@ -35,7 +30,8 @@ public class OrderService {
                 new DishId(dishId),
                 restaurantId,
                 PRICE,
-                quantity
+                quantity,
+                name
         );
 
         orderRepository.save(order);

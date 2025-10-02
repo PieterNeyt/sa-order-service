@@ -1,3 +1,7 @@
+export function showDishes(){
+
+}
+
 
 export function setupDishes() {
     const orderLineButtons = document.querySelectorAll<HTMLButtonElement>(".add-btn");

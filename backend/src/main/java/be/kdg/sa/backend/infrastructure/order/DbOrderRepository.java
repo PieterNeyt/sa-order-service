@@ -1,9 +1,9 @@
-package be.kdg.sa.backend.infrastructure;
+package be.kdg.sa.backend.infrastructure.order;
 
 import be.kdg.sa.backend.domain.Order;
 import be.kdg.sa.backend.domain.OrderRepository;
-import be.kdg.sa.backend.infrastructure.jpa.JpaOrderEntity;
-import be.kdg.sa.backend.infrastructure.jpa.JpaOrderRepository;
+import be.kdg.sa.backend.infrastructure.order.jpa.JpaOrderEntity;
+import be.kdg.sa.backend.infrastructure.order.jpa.JpaOrderRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

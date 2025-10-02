@@ -17,68 +17,16 @@
     </div>
 </nav>
 
-<!-- Restaurant Header -->
 <header class="restaurant-header">
-    <h1>Sushi Palace</h1>
+    <h1 id="restaurant-name"></h1>
     <p>Open: 11:00 - 22:00 | Verzendkosten: €2,50</p>
 </header>
 <input type="hidden" id="orderId" value="b7037887-235d-4cbf-92bc-606418e77d71">
-<!-- Main content -->
+<input type="hidden" id="restaurantId" value="">
+
 <div class="restaurant-container">
-    <!-- Menu column -->
-    <div class="menu-column">
-        <!-- Hardcoded menu items -->
-        <div class="menu-item">
-            <img src="logos/sushi1.jpg" alt="Sushi Set 1">
-            <div class="menu-info">
-                <h3>Sushi Set 1</h3>
-                <p>8 stuks sushi met zalm en avocado</p>
-                <p class="menu-price">€12,50</p>
-            </div>
-            <label>
-                <input type="number" class="quantity-input" id="quantity-11111111-1111-1111-1111-111111111111" min="1" value="1">
-            </label>
-            <button class="add-btn" id="11111111-1111-1111-1111-111111111111">Toevoegen</button>
-        </div>
+    <div class="menu-column" id="dishes-list">
 
-        <div class="menu-item">
-            <img src="logos/sushi2.jpg" alt="Sushi Set 2">
-            <div class="menu-info">
-                <h3>Sushi Set 2</h3>
-                <p>12 stuks sushi mix met tonijn en garnalen</p>
-                <p class="menu-price">€18,00</p>
-            </div>
-            <label>
-                <input type="number" class="quantity-input" id="quantity-11111111-1111-1111-1111-111111111122" min="1" value="1">
-            </label>
-            <button class="add-btn" id="11111111-1111-1111-1111-111111111122">Toevoegen</button>
-        </div>
-
-        <div class="menu-item">
-            <img src="logos/sushi3.jpg" alt="Sushi Set 3">
-            <div class="menu-info">
-                <h3>Sushi Set 3</h3>
-                <p>10 stuks sushi vegetarisch</p>
-                <p class="menu-price">€14,00</p>
-            </div>
-            <label>
-                <input type="number" class="quantity-input" id="quantity-11111111-2222-1111-1111-111111111111" min="1" value="1">
-            </label>
-            <button class="add-btn" id="11111111-2222-1111-1111-111111111111">Toevoegen</button>
-        </div>
-
-        <div class="menu-item">
-            <img src="logos/soup.jpg" alt="Miso Soup">
-            <div class="menu-info">
-                <h3>Miso Soup</h3>
-                <p>Warme Japanse soep met tofu en zeewier</p>
-                <p class="menu-price">€3,50</p>
-            </div>
-            <label>
-                <input type="number" class="quantity-input" id="quantity-11111111-2222-2222-2222-111111111111" min="1" value="1">
-            </label>
-            <button class="add-btn" id="11111111-2222-2222-2222-111111111111">Toevoegen</button>
-        </div>
     </div>
 
     <!-- Cart column -->

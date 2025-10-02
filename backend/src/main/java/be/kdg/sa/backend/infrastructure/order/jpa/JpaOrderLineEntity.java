@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure.jpa;
+package be.kdg.sa.backend.infrastructure.order.jpa;
 
 import be.kdg.sa.backend.domain.OrderLine;
 import jakarta.persistence.*;
@@ -18,6 +18,9 @@ public class JpaOrderLineEntity {
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private int quantity;
