@@ -1,5 +1,5 @@
 ### Build tools ###
-.gradle
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -15,15 +15,16 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS (Spring Tool Suite) ###
-.apt_generated
+.apt_generated/
 .classpath
 .factorypath
 .project
 .settings/
 .springBeans
-.sts4-cache
+.sts4-cache/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
@@ -57,6 +58,12 @@ Thumbs.db
 *.swp
 *.swo
 *.bak
+*.lock
+.lock/
+probe/
+*.pid
+*.seed
+*.cache/
 
 ### Java specific ###
 *.class
@@ -69,3 +76,14 @@ Thumbs.db
 *.h2.db
 *.mv.db
 *.trace.db
+
+### Common temp or runtime dirs ###
+logs/
+tmp/
+temp/
+.cache/
+.lock/
+bin/
+probe/
+generated/
+test-output/
