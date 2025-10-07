@@ -25,17 +25,21 @@ public class JpaOrderLineEntity {
     @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
+    private int preparationTime;
+
     @MapsId("orderId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private JpaOrderEntity order;
 
     public JpaOrderLineEntity() {}
 
-    public JpaOrderLineEntity(UUID orderId,UUID dishId, BigDecimal price, int quantity,String name) {
+    public JpaOrderLineEntity(UUID orderId,UUID dishId, BigDecimal price, int quantity,String name, int preparationTime) {
         this.id = new JpaOrderLineId(orderId, dishId);
         this.price = price;
         this.quantity = quantity;
         this.name = name;
+        this.preparationTime = preparationTime;
     }
 
     public static JpaOrderLineEntity fromDomain(OrderLine orderLine, UUID orderId) {
@@ -44,7 +48,8 @@ public class JpaOrderLineEntity {
                 orderLine.getDishId().id(),
                 orderLine.getPrice(),
                 orderLine.getQuantity(),
-                orderLine.getName()
+                orderLine.getName(),
+                orderLine.getPreparationTime()
         );
     }
 }

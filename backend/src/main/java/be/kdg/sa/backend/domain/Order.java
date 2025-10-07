@@ -39,7 +39,7 @@ public class Order {
     }
 
 
-    public void addDish(final DishId dishId, final RestaurantId restaurantId, final BigDecimal price, int quantity,String name) {
+    public void addDish(final DishId dishId, final RestaurantId restaurantId, final BigDecimal price, int quantity,String name, int preparationTime) {
         Assert.isTrue(this.restaurantId.id().equals(restaurantId.id()), "All items in shopping cart must be from same restaurant");
 
         final var existingShoppingCart = shoppingCart.stream()
@@ -48,7 +48,7 @@ public class Order {
 
         existingShoppingCart.ifPresentOrElse(
                 shoppingCart -> shoppingCart.addQuantity(quantity),
-                () -> shoppingCart.add(new OrderLine(dishId,price,quantity,name))
+                () -> shoppingCart.add(new OrderLine(dishId,price,quantity,name,preparationTime))
         );
     }
 }

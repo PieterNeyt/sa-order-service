@@ -63,7 +63,8 @@ public class JpaOrderEntity {
                 order.getRestaurantId(),
                 orderLine.getPrice(),
                 orderLine.getQuantity(),
-                orderLine.getName()
+                orderLine.getName(),
+                orderLine.getPreparationTime()
         ));
         return order;
     }

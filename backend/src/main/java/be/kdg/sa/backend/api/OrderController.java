@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/order")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:9090"})
 public class OrderController {
     private final OrderService orderService;
     private final UUID CLIENT = UUID.randomUUID();
@@ -24,7 +25,7 @@ public class OrderController {
     public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId,
                                                           @PathVariable("restaurantId") UUID restaurantId,
                                                           @RequestBody OrderDto.OrderLineDto orderDto) {
-        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name(),orderDto.price(),restaurantId);
+        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name(),orderDto.price(),restaurantId,orderDto.preparationTime());
         return ResponseEntity.ok(OrderDto.from(order));
     }
     @GetMapping("/{orderId}/shoppingCart/")
@@ -32,4 +33,6 @@ public class OrderController {
         Order order = orderService.getShoppingCart(orderId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
+
+
 }

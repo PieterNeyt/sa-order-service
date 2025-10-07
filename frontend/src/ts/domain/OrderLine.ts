@@ -16,7 +16,8 @@ export function setupDishes() {
                 dishId: dishId,
                 price:dish.price,
                 quantity: Number(quantityInput.value),
-                name:dish.name
+                name:dish.name,
+                preparationTime: dish.preparationTime
             }
             const order:Order = await addNewOrderLine(orderId.value,dish.RestaurantId, orderLineDto);
             if(order.orderId)
@@ -55,7 +56,7 @@ function addToWinkelMandje(order: Order) {
 }
 
 export async function addNewOrderLine(orderId:string,restaurantId:string,orderLine:ShoppingCartItem){
-    const response = await fetch(`/api/order/${orderId}/shoppingCart/${restaurantId}`, {
+    const response = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/${restaurantId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -71,11 +72,53 @@ export async function addNewOrderLine(orderId:string,restaurantId:string,orderLi
     return data
 }
 
+export async function prepareCheckout(orderId: string, restaurantId: string) {
+    // Eerst winkelmand ophalen van order-service
+    const cartResponse = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/`, {
+        method: "GET"
+    });
+
+    const shoppingCart = await cartResponse.json();
+
+    // Maak checkoutRequest-object aan dat het restaurant verwacht
+    const checkoutRequest = {
+        orderId: orderId,
+        restaurantId: restaurantId, // voorlopig zo
+        items: shoppingCart.map((item: any) => ({
+            dishId: item.dishId,
+            name: item.name,
+            preparationTime: item.preparationTime ?? 10,
+            price: item.price
+        }))
+    };
+
+    // Stuur naar restaurant-service
+    const response = await fetch(`http://localhost:8080/api/restaurant/prepareCheckout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checkoutRequest)
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data; // verwacht bv. UUID of OrderDto terug
+}
+
+
+
+
+
+
 export interface ShoppingCartItem {
     dishId: string;
     price: number;
     quantity: number;
     name:string;
+    preparationTime: number;
 }
 
 export interface Order {
@@ -83,4 +126,16 @@ export interface Order {
     clientId: string;
     restaurantId: string;
     shoppingCart: ShoppingCartItem[];
+}
+export interface CheckoutRequest {
+    orderId: string | null;
+    restaurantId: string;
+    clientId: string;
+    items: Array<{
+        dishId: string;
+        name: string;
+        price: number;
+        quantity: number;
+        preparationTime: number;
+    }>;
 }

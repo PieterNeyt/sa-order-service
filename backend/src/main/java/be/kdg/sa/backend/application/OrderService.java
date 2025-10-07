@@ -17,7 +17,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name,BigDecimal price,UUID restaurantId) {
+    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name,BigDecimal price,UUID restaurantId, int preparationTime) {
         RestaurantId restaurantID = new RestaurantId(restaurantId);
         //check of al een order bestaat
         Order order = this.orderRepository.findById(orderId)
@@ -28,7 +28,8 @@ public class OrderService {
                 restaurantID,
                 price,
                 quantity,
-                name
+                name,
+                preparationTime
         );
 
         orderRepository.save(order);
@@ -40,4 +41,7 @@ public class OrderService {
         return this.orderRepository.findById(orderId)
                 .orElseThrow();
     }
+
+
+
 }

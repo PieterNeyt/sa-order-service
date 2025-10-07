@@ -58,6 +58,7 @@ export async function showDishes(){
                 <h3>${item.name}</h3>
                 <p>${item.description}</p>
                 <p class="menu-price">€${item.price}</p>
+                <p class="preparation-time">Dit item heeft een bereidingstijd van: ${item.preparationTime} minuten</p>
             </div>
             <label>
                 <input type="number" class="quantity-input" id="quantity-${item.id}" min="1" value="1">
@@ -70,6 +71,10 @@ export async function showDishes(){
 
         const restaurantName = document.getElementById("restaurant-name") as HTMLElement
         restaurantName.innerHTML = restaurant.name
+
+        const restaurantIdInput = document.getElementById("restaurantId") as HTMLInputElement;
+        restaurantIdInput.value = restaurant.id;
+
     }
 }
 
@@ -104,6 +109,7 @@ export interface DishDto {
     price: number;
     dishState: string; // NOT_PUBLISHED, etc.
     restaurantId:string;
+    preparationTime:number;
 }
 
 

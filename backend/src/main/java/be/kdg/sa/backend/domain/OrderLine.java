@@ -13,8 +13,9 @@ public class OrderLine {
     private final BigDecimal price;
     private final String name;
     private int quantity;
+    private final int preparationTime;
 
-    public OrderLine(DishId dishId, BigDecimal price, int quantity,String name) {
+    public OrderLine(DishId dishId, BigDecimal price, int quantity,String name,  int preparationTime) {
         this.name = name;
         Assert.notNull(dishId, "dishId must not be null");
         this.dishId = dishId;
@@ -24,6 +25,9 @@ public class OrderLine {
 
         validatePrice(price);
         this.price = price;
+
+        validatePreparationTime(preparationTime);
+        this.preparationTime = preparationTime;
     }
 
 
@@ -32,6 +36,9 @@ public class OrderLine {
     }
     public void validatePrice(BigDecimal price) {
         Assert.isTrue(price.compareTo(BigDecimal.ZERO)>0, "price must be greater than 0");
+    }
+    public void validatePreparationTime(int preparationTime) {
+        Assert.isTrue(preparationTime >0, "preparationTime must be greater than 0");
     }
 
     public boolean isForDishWithPrice(DishId dishId, BigDecimal price) {

@@ -29,14 +29,16 @@ public record OrderDto(
             UUID dishId,
             BigDecimal price,
             int quantity,
-            String name
+            String name,
+            int preparationTime
     ) {
         public static OrderLineDto from(final OrderLine orderLine) {
             return new OrderLineDto(
                     orderLine.getDishId().id(),
                     orderLine.getPrice(),
                     orderLine.getQuantity(),
-                    orderLine.getName()
+                    orderLine.getName(),
+                    orderLine.getPreparationTime()
             );
         }
 
