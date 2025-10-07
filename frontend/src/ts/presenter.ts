@@ -5,17 +5,38 @@ export async function showRestaurants(){
     if(restaurantHtml) {
         const response = await fetch(`http://localhost:8080/api/restaurant/get`, {method: "GET"});
         const restaurants: Restaurant[] = await response.json();
+
         const html = restaurants
-            .map(item => `
-        <a href="restaurantPage.html?id=${item.id}" class="card" id="${item.id}">
-        <img src="${item.logo}" alt="Curry House Logo" />
-        <div class="card-content">
-            <h2>${item.name}</h2>
-            <p class="price">${item.priceCategory}</p>
-            <p class="status open">open == ${item.isOpen}</p>
-        </div>
-    </a>
-    `).join("")
+            .map(item => {
+                const isOpen = item.isOpen;
+                const statusClass = isOpen ? "open" : "closed";
+                const statusText = isOpen ? "Open" : "Gesloten";
+
+                // Als het restaurant gesloten is, gebruik een div in plaats van een a-tag
+                if (!isOpen) {
+                    return `
+                    <div class="card closed-card" id="${item.id}">
+                        <img src="${item.logo}" alt="${item.name} Logo" />
+                        <div class="card-content">
+                            <h2>${item.name}</h2>
+                            <p class="price">${item.priceCategory}</p>
+                            <p class="status ${statusClass}">${statusText}</p>
+                        </div>
+                    </div>
+                    `;
+                } else {
+                    return `
+                    <a href="restaurantPage.html?id=${item.id}" class="card" id="${item.id}">
+                        <img src="${item.logo}" alt="${item.name} Logo" />
+                        <div class="card-content">
+                            <h2>${item.name}</h2>
+                            <p class="price">${item.priceCategory}</p>
+                            <p class="status ${statusClass}">${statusText}</p>
+                        </div>
+                    </a>
+                    `;
+                }
+            }).join("");
         restaurantHtml.innerHTML = html;
     }
 }
