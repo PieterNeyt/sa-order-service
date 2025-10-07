@@ -17,9 +17,11 @@ if (checkoutBtn) {
 
 
         try {
-            await prepareCheckout(orderIdInput.value,restaurantIdInput.value);
-            console.log("Checkout preperation succesfull");
-            // Toon success message of redirect naar betaalpagina
+           await prepareCheckout(orderIdInput.value,restaurantIdInput.value);
+
+           console.log("Checkout preparation successful");
+           window.location.href = `checkOutPage.html?id=${encodeURIComponent(orderIdInput.value)}`;
+
         } catch (error) {
             console.error("Checkout failed:", error);
             // @ts-ignore
