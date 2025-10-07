@@ -31,10 +31,11 @@ public class JpaOrderLineEntity {
 
     public JpaOrderLineEntity() {}
 
-    public JpaOrderLineEntity(UUID orderId,UUID dishId, BigDecimal price, int quantity) {
+    public JpaOrderLineEntity(UUID orderId,UUID dishId, BigDecimal price, int quantity,String name) {
         this.id = new JpaOrderLineId(orderId, dishId);
         this.price = price;
         this.quantity = quantity;
+        this.name = name;
     }
 
     public static JpaOrderLineEntity fromDomain(OrderLine orderLine, UUID orderId) {
@@ -42,7 +43,8 @@ public class JpaOrderLineEntity {
                 orderId,
                 orderLine.getDishId().id(),
                 orderLine.getPrice(),
-                orderLine.getQuantity()
+                orderLine.getQuantity(),
+                orderLine.getName()
         );
     }
 }

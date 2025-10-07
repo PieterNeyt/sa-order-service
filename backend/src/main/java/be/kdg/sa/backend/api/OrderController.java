@@ -20,9 +20,11 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/{orderId}/shoppingCart/")
-    public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId, @RequestBody OrderDto.OrderLineDto orderDto) {
-        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name());
+    @PostMapping("/{orderId}/shoppingCart/{restaurantId}")
+    public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId,
+                                                          @PathVariable("restaurantId") UUID restaurantId,
+                                                          @RequestBody OrderDto.OrderLineDto orderDto) {
+        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name(),orderDto.price(),restaurantId);
         return ResponseEntity.ok(OrderDto.from(order));
     }
     @GetMapping("/{orderId}/shoppingCart/")

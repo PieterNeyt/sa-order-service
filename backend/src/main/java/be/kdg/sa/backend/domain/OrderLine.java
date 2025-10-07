@@ -35,7 +35,7 @@ public class OrderLine {
     }
 
     public boolean isForDishWithPrice(DishId dishId, BigDecimal price) {
-        return  dishId.equals(this.dishId) &&  price.equals(this.price);
+        return  dishId.equals(this.dishId) &&  this.price.compareTo(price) == 0;
     }
 
     public void addQuantity(int quantity) {

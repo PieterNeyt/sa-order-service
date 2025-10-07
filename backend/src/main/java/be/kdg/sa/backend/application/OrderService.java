@@ -12,24 +12,21 @@ import java.util.UUID;
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final UUID RESTAURANT_ID =  UUID.randomUUID();
-    private final BigDecimal PRICE = BigDecimal.valueOf(12.45);
-
 
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
-    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name/*,UUID restaurantId*/) {
-        RestaurantId restaurantId = new RestaurantId(RESTAURANT_ID);
+    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name,BigDecimal price,UUID restaurantId) {
+        RestaurantId restaurantID = new RestaurantId(restaurantId);
         //check of al een order bestaat
         Order order = this.orderRepository.findById(orderId)
-                .orElseGet(() -> new Order(restaurantId,new ClientId(clientId)));
+                .orElseGet(() -> new Order(restaurantID,new ClientId(clientId)));
         //toevoegen aan order
         order.addDish(
                 new DishId(dishId),
-                restaurantId,
-                PRICE,
+                restaurantID,
+                price,
                 quantity,
                 name
         );
