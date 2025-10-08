@@ -7,34 +7,28 @@
 </head>
 <body>
 <h1>Checkout</h1>
+
+<input type="hidden" id="orderId" value="">
+<input type="hidden" id="restaurantId" value="">
+
 <p>Vul hieronder je gegevens in om je bestelling af te ronden.</p>
 
-<form action="/checkout" method="post">
-  <fieldset>
-    <legend>Persoonlijke gegevens</legend>
+<label for="name">Naam:</label><br>
+<input type="text" id="name" required><br><br>
 
-    <label for="name">Naam:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+<label for="email">Contact e-mail:</label><br>
+<input type="email" id="email" required><br><br>
 
-    <label for="email">Contact e-mail:</label><br>
-    <input type="email" id="email" name="email" required><br><br>
-  </fieldset>
+<label for="street">Straat en huisnummer:</label><br>
+<input type="text" id="street" required><br><br>
 
-  <fieldset>
-    <legend>Leveradres</legend>
+<label for="postalcode">Postcode:</label><br>
+<input type="text" id="postalcode" required><br><br>
 
-    <label for="street">Straat en huisnummer:</label><br>
-    <input type="text" id="street" name="street" required><br><br>
+<label for="city">Stad:</label><br>
+<input type="text" id="city" required><br><br>
 
-    <label for="postalcode">Postcode:</label><br>
-    <input type="text" id="postalcode" name="postalcode" required><br><br>
+<button id="checkoutBtn">Bestelling afronden</button>
 
-    <label for="city">Stad:</label><br>
-    <input type="text" id="city" name="city" required><br><br>
-
-  </fieldset>
-
-  <button type="submit">Bestelling afronden</button>
-</form>
 </body>
 </html>

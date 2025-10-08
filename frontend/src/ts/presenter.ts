@@ -118,3 +118,12 @@ export interface OpeningHourDto {
     openingTime: string; // HH:mm
     closingTime: string; // HH:mm
 }
+
+export interface OrderinformationDto {
+    name: string;
+    email: string;
+    street: string;
+    postalcode: string;
+    city: string;
+
+}

@@ -1,4 +1,4 @@
-import type {DishDto} from "../presenter.ts";
+import type {DishDto, OrderinformationDto} from "../presenter.ts";
 
 
 export function setupDishes() {
@@ -104,10 +104,46 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
         throw new Error(errorText || `HTTP error! Status: ${response.status}`);
     }
 
+    return await response.json();
+}
+
+
+export async function checkout(orderId: string, restaurantId: string, orderInfo: OrderinformationDto) {
+    // Eerst winkelmand ophalen van order-service
+    const cartResponse = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/`, {
+        method: "GET"
+    });
+
+    const shoppingCart = await cartResponse.json();
+
+    // Maak checkoutRequest-object aan dat het restaurant verwacht
+    const checkoutRequest = {
+        orderId: orderId,
+        restaurantId: restaurantId,
+        customer: orderInfo,
+        items: shoppingCart.map((item: any) => ({
+            dishId: item.dishId,
+            name: item.name,
+            preparationTime: item.preparationTime ?? 10,
+            price: item.price
+        }))
+    };
+
+    // Stuur naar restaurant-service
+    const response = await fetch(`http://localhost:8080/api/restaurant/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checkoutRequest)
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP error! Status: ${response.status}`);
+    }
+
     const data = await response.json();
     return data; // verwacht bv. UUID of OrderDto terug
 }
-
 
 
 
