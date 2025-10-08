@@ -124,7 +124,7 @@ export async function checkout(orderId: string, restaurantId: string, orderInfo:
         items: shoppingCart.map((item: any) => ({
             dishId: item.dishId,
             name: item.name,
-            preparationTime: item.preparationTime ?? 10,
+            preparationTime: item.preparationTime,
             price: item.price
         }))
     };
@@ -142,7 +142,7 @@ export async function checkout(orderId: string, restaurantId: string, orderInfo:
     }
 
     const data = await response.json();
-    return data; // verwacht bv. UUID of OrderDto terug
+    return data;
 }
 
 

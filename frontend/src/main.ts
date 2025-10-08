@@ -47,10 +47,9 @@ if (checkoutBtn) {
 
         try {
             const result = await checkout(orderIdInput.value, restaurantIdInput.value, orderinformationDto);
-            console.log("Checkout preparation successful:", result);
+            console.log("Checkout successful:", result);
 
-            // Redirect naar de checkoutpagina met orderId
-            window.location.href = `checkOutPage.html?id=${orderIdInput.value}`;
+            // hier die order aanmaken in deze service
         } catch (error: any) {
             console.error("Checkout failed:", error);
             alert(`Checkout mislukt: ${error.message || error}`);
