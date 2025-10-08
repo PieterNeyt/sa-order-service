@@ -41,6 +41,16 @@ public class OrderService {
         return this.orderRepository.findById(orderId)
                 .orElseThrow();
     }
+    public Order placeOrder(UUID orderId) {
+        var order = this.orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
+
+        // FIX: Gebruik een setter methode in plaats van directe assignment
+        order.setOrderState(OrderState.PLACED);
+
+        this.orderRepository.save(order);
+        return order;
+    }
 
 
 

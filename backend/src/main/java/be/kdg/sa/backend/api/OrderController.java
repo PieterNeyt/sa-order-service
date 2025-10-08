@@ -33,6 +33,13 @@ public class OrderController {
         Order order = orderService.getShoppingCart(orderId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
+    @PatchMapping("/{orderId}/placeOrder")
+    public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(@PathVariable UUID orderId) {
+        Order order = orderService.placeOrder(orderId);
+        return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
+    }
+
+
 
 
 

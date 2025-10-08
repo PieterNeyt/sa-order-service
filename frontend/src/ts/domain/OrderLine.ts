@@ -73,7 +73,7 @@ export async function addNewOrderLine(orderId:string,restaurantId:string,orderLi
 }
 
 export async function prepareCheckout(orderId: string, restaurantId: string) {
-    // Eerst winkelmand ophalen van order-service
+
     const cartResponse = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/`, {
         method: "GET"
     });
@@ -83,7 +83,7 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
     // Maak checkoutRequest-object aan dat het restaurant verwacht
     const checkoutRequest = {
         orderId: orderId,
-        restaurantId: restaurantId, // voorlopig zo
+        restaurantId: restaurantId,
         items: shoppingCart.map((item: any) => ({
             dishId: item.dishId,
             name: item.name,
@@ -108,11 +108,14 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
 }
 
 
-export async function checkout(orderId: string, restaurantId: string, orderInfo: OrderinformationDto) {
-    // Eerst winkelmand ophalen van order-service
+export async function checkout(orderId: string,restaurantId: string, orderInfo: OrderinformationDto) {
+
     const cartResponse = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/`, {
         method: "GET"
     });
+    if (!cartResponse.ok) {
+        throw new Error(`Fout bij ophalen van winkelmand (status: ${cartResponse.status})`);
+    }
 
     const shoppingCart = await cartResponse.json();
 
@@ -129,7 +132,7 @@ export async function checkout(orderId: string, restaurantId: string, orderInfo:
         }))
     };
 
-    // Stuur naar restaurant-service
+
     const response = await fetch(`http://localhost:8080/api/restaurant/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -141,8 +144,16 @@ export async function checkout(orderId: string, restaurantId: string, orderInfo:
         throw new Error(errorText || `HTTP error! Status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    const updateOrderState = await fetch(`http://localhost:9090/api/order/${orderId}/placeOrder`, {
+        method: "PATCH"
+    });
+
+    if (!updateOrderState.ok) {
+        throw new Error(`Fout bij updaten van orderstatus: ${updateOrderState.status}`);
+    }
+
+
+    return await response.json();
 }
 
 

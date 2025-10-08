@@ -20,21 +20,29 @@ if (prepareCheckoutBtn) {
            await prepareCheckout(orderIdInput.value,restaurantIdInput.value);
 
            console.log("Checkout preparation successful");
-           window.location.href = `checkOutPage.html?id=${encodeURIComponent(orderIdInput.value)}`;
+            window.location.href = `checkOutPage.html?orderId=${encodeURIComponent(orderIdInput.value)}&restaurantId=${encodeURIComponent(restaurantIdInput.value)}`;
 
         } catch (error) {
-            console.error("Checkout failed:", error);
+            console.error("Checkout preparation failed:", error);
             // @ts-ignore
-            alert(`Checkout mislukt: ${error.message}`);
+            alert(`Checkout preparation mislukt: ${error.message}`);
         }
     });
 }
-const checkoutBtn = document.querySelector<HTMLButtonElement>(".checkoutBtn");
+const checkoutBtn = document.querySelector<HTMLButtonElement>("#checkoutBtn");
 if (checkoutBtn) {
     checkoutBtn.addEventListener("click", async () => {
-        const orderIdInput = document.getElementById("orderId") as HTMLInputElement;
-        const restaurantIdInput = document.getElementById("restaurantId") as HTMLInputElement;
-
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get("orderId");
+        const restaurantId = urlParams.get("restaurantId");
+        if (!orderId) {
+            alert("Geen order ID gevonden.");
+            return;
+        }
+        if (!restaurantId) {
+            alert("Geen restaurantId gevonden.");
+            return;
+        }
         // Inputwaarden ophalen
         const name = (document.getElementById("name") as HTMLInputElement).value;
         const email = (document.getElementById("email") as HTMLInputElement).value;
@@ -46,10 +54,9 @@ if (checkoutBtn) {
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
 
         try {
-            const result = await checkout(orderIdInput.value, restaurantIdInput.value, orderinformationDto);
+            const result = await checkout(orderId,restaurantId, orderinformationDto);
             console.log("Checkout successful:", result);
 
-            // hier die order aanmaken in deze service
         } catch (error: any) {
             console.error("Checkout failed:", error);
             alert(`Checkout mislukt: ${error.message || error}`);

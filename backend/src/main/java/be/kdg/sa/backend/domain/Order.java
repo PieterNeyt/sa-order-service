@@ -18,7 +18,8 @@ public class Order {
     private final OrderId orderId;
     private final ClientId clientId;
     private final RestaurantId restaurantId;
-    private final OrderState orderState;
+    @Setter
+    private OrderState orderState;
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
@@ -51,4 +52,6 @@ public class Order {
                 () -> shoppingCart.add(new OrderLine(dishId,price,quantity,name,preparationTime))
         );
     }
+
+
 }
