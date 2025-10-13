@@ -2,27 +2,32 @@ package be.kdg.sa.backend.application;
 
 
 import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.restaurant.Restaurant;
+import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final RestaurantCatalog restaurantCatalog;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog) {
         this.orderRepository = orderRepository;
+        this.restaurantCatalog = restaurantCatalog;
     }
 
     public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name,BigDecimal price,UUID restaurantId, int preparationTime) {
         RestaurantId restaurantID = new RestaurantId(restaurantId);
-        //check of al een order bestaat
+
         Order order = this.orderRepository.findById(orderId)
                 .orElseGet(() -> new Order(restaurantID,new ClientId(clientId)));
-        //toevoegen aan order
+
         order.addDish(
                 new DishId(dishId),
                 restaurantID,
@@ -34,7 +39,6 @@ public class OrderService {
 
         orderRepository.save(order);
         return order;
-
     }
 
     public Order getShoppingCart(UUID orderId) {
@@ -45,13 +49,15 @@ public class OrderService {
         var order = this.orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
 
-        // FIX: Gebruik een setter methode in plaats van directe assignment
-        order.setOrderState(OrderState.PLACED);
+        order.place();
 
         this.orderRepository.save(order);
         return order;
     }
 
 
-
+    public List<Restaurant> getRestaurants() {
+        return restaurantCatalog.getRestaurants()
+                .orElseThrow(() -> new RuntimeException("Restaurant niet gevonden"));
+    }
 }

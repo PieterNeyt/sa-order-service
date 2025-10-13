@@ -46,6 +46,9 @@ public class OrderLine {
     }
 
     public void addQuantity(int quantity) {
+        if(quantity <= 0)
+            throw new IllegalArgumentException("quantity must be greater than 0");
+
         this.quantity += quantity;
     }
 }

@@ -3,7 +3,7 @@ import {setupDishes} from "./domain/OrderLine.ts";
 export async function showRestaurants(){
     const restaurantHtml = document.getElementById("restaurant-list") as HTMLDivElement
     if(restaurantHtml) {
-        const response = await fetch(`http://localhost:8080/api/restaurant/get`, {method: "GET"});
+        const response = await fetch(`http://localhost:9090/api/order/restaurants`, {method: "GET"});
         const restaurants: Restaurant[] = await response.json();
 
         const html = restaurants

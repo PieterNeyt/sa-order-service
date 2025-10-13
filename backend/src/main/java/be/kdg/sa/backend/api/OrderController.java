@@ -3,6 +3,7 @@ package be.kdg.sa.backend.api;
 
 import be.kdg.sa.backend.application.OrderService;
 import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,20 +26,35 @@ public class OrderController {
     public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId,
                                                           @PathVariable("restaurantId") UUID restaurantId,
                                                           @RequestBody OrderDto.OrderLineDto orderDto) {
-        Order order = orderService.addDishToShoppingCart(orderId,orderDto.dishId(),orderDto.quantity(),CLIENT,orderDto.name(),orderDto.price(),restaurantId,orderDto.preparationTime());
+        Order order = orderService.addDishToShoppingCart(
+                orderId,
+                orderDto.dishId(),
+                orderDto.quantity(),
+                CLIENT,
+                orderDto.name(),
+                orderDto.price(),
+                restaurantId,
+                orderDto.preparationTime());
         return ResponseEntity.ok(OrderDto.from(order));
     }
+
     @GetMapping("/{orderId}/shoppingCart/")
     public ResponseEntity<List<OrderDto.OrderLineDto>> getShoppingCart(@PathVariable("orderId") UUID orderId) {
         Order order = orderService.getShoppingCart(orderId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
+
     @PatchMapping("/{orderId}/placeOrder")
     public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(@PathVariable UUID orderId) {
         Order order = orderService.placeOrder(orderId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
 
+    @GetMapping("/restaurants")
+    public ResponseEntity<List<GetAllRestaurantDto>> getRestaurants() {
+       List<Restaurant> restaurants = orderService.getRestaurants();
+       return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
+    }
 
 
 

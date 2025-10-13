@@ -12,13 +12,11 @@ import java.util.UUID;
 
 
 @Getter
-@Setter
 @ToString
 public class Order {
     private final OrderId orderId;
     private final ClientId clientId;
     private final RestaurantId restaurantId;
-    @Setter
     private OrderState orderState;
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
@@ -54,4 +52,7 @@ public class Order {
     }
 
 
+    public void place() {
+        this.orderState=OrderState.PLACED;
+    }
 }
