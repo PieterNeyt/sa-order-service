@@ -56,6 +56,7 @@ if (checkoutBtn) {
         try {
             const result = await checkout(orderId,restaurantId, orderinformationDto);
             console.log("Checkout successful:", result);
+            window.location.href = `trackingPage.html?orderId=${encodeURIComponent(orderId)}`;
 
         } catch (error: any) {
             console.error("Checkout failed:", error);

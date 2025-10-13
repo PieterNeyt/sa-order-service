@@ -2,6 +2,8 @@ package be.kdg.sa.backend.api;
 
 import be.kdg.sa.backend.domain.Order;
 import be.kdg.sa.backend.domain.OrderLine;
+import be.kdg.sa.backend.domain.OrderState;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +13,7 @@ public record OrderDto(
         UUID orderId,
         UUID clientId,
         UUID restaurantId,
+        OrderState orderState,
         List<OrderLineDto> shoppingCart
 ) {
     public static OrderDto from(final Order order) {
@@ -21,6 +24,7 @@ public record OrderDto(
                 order.getOrderId().id(),
                 order.getClientId().id(),
                 order.getRestaurantId().id(),
+                order.getOrderState(),
                 lineDtos
         );
     }
