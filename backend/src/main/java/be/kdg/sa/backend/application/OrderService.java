@@ -2,6 +2,7 @@ package be.kdg.sa.backend.application;
 
 
 import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import org.springframework.stereotype.Service;
@@ -56,8 +57,12 @@ public class OrderService {
     }
 
 
-    public List<Restaurant> getRestaurants() {
+    public List<AllRestaurant> getRestaurants() {
         return restaurantCatalog.getRestaurants()
                 .orElseThrow(() -> new RuntimeException("Restaurant niet gevonden"));
+    }
+
+    public Restaurant getRestaurantWithDishes(UUID restaurantId) {
+        return restaurantCatalog.getRestaurantById(restaurantId).orElseThrow();
     }
 }

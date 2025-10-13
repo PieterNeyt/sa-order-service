@@ -3,11 +3,11 @@ package be.kdg.sa.backend.api;
 
 import be.kdg.sa.backend.application.OrderService;
 import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,8 +52,13 @@ public class OrderController {
 
     @GetMapping("/restaurants")
     public ResponseEntity<List<GetAllRestaurantDto>> getRestaurants() {
-       List<Restaurant> restaurants = orderService.getRestaurants();
+       List<AllRestaurant> restaurants = orderService.getRestaurants();
        return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
+    }
+    @GetMapping("/restaurants/{id}")
+    public ResponseEntity<RestaurantDto> getRestaurantWithDishes(@PathVariable("id") UUID restaurantId) {
+        Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
+        return ResponseEntity.ok(RestaurantDto.from(restaurant));
     }
 
 

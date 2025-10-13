@@ -1,6 +1,6 @@
 package be.kdg.sa.backend.api;
 
-import be.kdg.sa.backend.domain.restaurant.Restaurant;
+import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ public record GetAllRestaurantDto(UUID id,
                                   boolean isOpen,
                                   String  priceCategory,
                                   String logo) {
-    public static GetAllRestaurantDto from(Restaurant restaurant){
+    public static GetAllRestaurantDto from(AllRestaurant restaurant){
         return new GetAllRestaurantDto(
                 restaurant.id(),
                 restaurant.name(),
