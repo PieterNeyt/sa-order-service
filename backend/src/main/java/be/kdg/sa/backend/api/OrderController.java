@@ -60,6 +60,11 @@ public class OrderController {
         Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
         return ResponseEntity.ok(RestaurantDto.from(restaurant));
     }
+    @GetMapping("/dish/{id}")
+    public ResponseEntity<RestaurantDto.DishDto> getDishById(@PathVariable("id") UUID dishId) {
+        Restaurant.Dish dish = orderService.getDishById(dishId);
+        return ResponseEntity.ok(RestaurantDto.DishDto.from(dish));
+    }
 
 
 

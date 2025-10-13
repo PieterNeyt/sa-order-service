@@ -16,6 +16,7 @@ public record Restaurant(UUID id,
                 restaurantResponse.dishes().stream().map(Dish::from).toList());
     }
     public record Dish(UUID id,
+                               UUID RestaurantId,
                                String name,
                                String description,
                                BigDecimal price,
@@ -23,10 +24,11 @@ public record Restaurant(UUID id,
     ) {
         public static Dish from(RestaurantResponse.DishResponse dishResponse) {
             return new Dish(dishResponse.id(),
+                    dishResponse.RestaurantId(),
                     dishResponse.name(),
                     dishResponse.description(),
                     dishResponse.price(),
-                    dishResponse.preperationTime());
+                    dishResponse.preparationTime());
         }
     }
 }

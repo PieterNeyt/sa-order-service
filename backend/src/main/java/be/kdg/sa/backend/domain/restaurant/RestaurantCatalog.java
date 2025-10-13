@@ -8,4 +8,6 @@ public interface RestaurantCatalog {
     Optional<List<AllRestaurant>> getRestaurants();
 
     Optional<Restaurant> getRestaurantById(UUID restaurantId);
+
+    Optional<Restaurant.Dish> getDishById(UUID dishId);
 }

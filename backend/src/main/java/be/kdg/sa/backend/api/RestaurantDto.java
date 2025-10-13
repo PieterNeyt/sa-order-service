@@ -16,16 +16,18 @@ public record RestaurantDto(UUID id,
                 restaurant.dishes().stream().map(DishDto::from).toList());
     }
     public record DishDto(UUID id,
+                          UUID restaurantId,
                           String name,
                           String description,
                           BigDecimal price,
-                          int preperationTime
+                          int preparationTime
     ) {
         public static DishDto from(Restaurant.Dish dish) {
             return new DishDto(dish.id(),
+                    dish.RestaurantId(),
                     dish.name(),
                     dish.description(),
-            dish.price(),
+                    dish.price(),
                     dish.preperationTime());
         }
     }

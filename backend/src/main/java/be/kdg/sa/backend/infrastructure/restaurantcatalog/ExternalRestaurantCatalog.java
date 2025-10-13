@@ -55,6 +55,21 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
         }
     }
 
+    @Override
+    public Optional<Restaurant.Dish> getDishById(UUID dishId) {
+        try {
+            final RestaurantResponse.DishResponse dish = restClient
+                    .get()
+                    .uri("/dish/"+dishId)
+                    .retrieve()
+                    .body(RestaurantResponse.DishResponse.class);
+
+            return Optional.ofNullable(Restaurant.Dish.from(dish));
+
+        } catch (final HttpStatusCodeException e) {
+            return Optional.empty();
+        }
+    }
 
 
 }

@@ -65,4 +65,8 @@ public class OrderService {
     public Restaurant getRestaurantWithDishes(UUID restaurantId) {
         return restaurantCatalog.getRestaurantById(restaurantId).orElseThrow();
     }
+
+    public Restaurant.Dish getDishById(UUID dishId) {
+        return restaurantCatalog.getDishById(dishId).orElseThrow();
+    }
 }

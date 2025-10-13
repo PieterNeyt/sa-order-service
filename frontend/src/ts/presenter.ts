@@ -95,7 +95,7 @@ export interface RestaurantDto {
 
 export interface DishDto {
     id: string;
-    RestaurantId:string;
+    restaurantId:string;
     name: string;
     description: string;
     price: number;
