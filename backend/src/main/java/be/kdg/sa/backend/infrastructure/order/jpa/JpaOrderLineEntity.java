@@ -1,6 +1,6 @@
 package be.kdg.sa.backend.infrastructure.order.jpa;
 
-import be.kdg.sa.backend.domain.OrderLine;
+import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

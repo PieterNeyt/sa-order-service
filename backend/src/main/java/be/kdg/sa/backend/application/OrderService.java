@@ -1,10 +1,16 @@
 package be.kdg.sa.backend.application;
 
 
-import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.client.ClientId;
+import be.kdg.sa.backend.domain.order.orderline.DishId;
+import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.OrderRepository;
+import be.kdg.sa.backend.domain.order.RestaurantId;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
+import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +23,15 @@ import java.util.UUID;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final RestaurantCatalog restaurantCatalog;
+    private final RabbitTemplate rabbitTemplate;
 
-    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog) {
+    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate) {
         this.orderRepository = orderRepository;
         this.restaurantCatalog = restaurantCatalog;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
-    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity,UUID clientId,String name,BigDecimal price,UUID restaurantId, int preparationTime) {
+    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity, UUID clientId, String name, BigDecimal price, UUID restaurantId, int preparationTime) {
         RestaurantId restaurantID = new RestaurantId(restaurantId);
 
         Order order = this.orderRepository.findById(orderId)
@@ -46,13 +54,22 @@ public class OrderService {
         return this.orderRepository.findById(orderId)
                 .orElseThrow();
     }
+
     public Order placeOrder(UUID orderId) {
         var order = this.orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
 
         order.place();
-
         this.orderRepository.save(order);
+
+        this.rabbitTemplate.convertAndSend(
+                RabbitMQTopology.ORDER_EXCHANGE_NAME,
+                "order.place."+order.getOrderId().id(),
+                new OrderMessage(order.getOrderId().id(),
+                        order.getRestaurantId().id(),
+                        order.calculateTotalPrice())
+        );
+
         return order;
     }
 

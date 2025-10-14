@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.domain;
+package be.kdg.sa.backend.domain.order.orderline;
 
 import lombok.Getter;
 import org.jmolecules.ddd.annotation.Entity;

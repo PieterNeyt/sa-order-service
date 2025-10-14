@@ -1,14 +1,15 @@
-package be.kdg.sa.backend.domain;
+package be.kdg.sa.backend.domain.order;
 
+import be.kdg.sa.backend.domain.client.ClientId;
+import be.kdg.sa.backend.domain.order.orderline.DishId;
+import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 @Getter
@@ -38,7 +39,7 @@ public class Order {
     }
 
 
-    public void addDish(final DishId dishId, final RestaurantId restaurantId, final BigDecimal price, int quantity,String name, int preparationTime) {
+    public void addDish(final DishId dishId, final RestaurantId restaurantId, final BigDecimal price, int quantity, String name, int preparationTime) {
         Assert.isTrue(this.restaurantId.id().equals(restaurantId.id()), "All items in shopping cart must be from same restaurant");
 
         final var existingShoppingCart = shoppingCart.stream()
@@ -54,5 +55,11 @@ public class Order {
 
     public void place() {
         this.orderState=OrderState.PLACED;
+    }
+
+    public BigDecimal calculateTotalPrice() {
+        return shoppingCart.stream()
+                .map(orderLine -> orderLine.getPrice().multiply(BigDecimal.valueOf(orderLine.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

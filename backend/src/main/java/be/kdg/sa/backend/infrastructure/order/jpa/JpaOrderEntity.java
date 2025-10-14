@@ -1,6 +1,8 @@
 package be.kdg.sa.backend.infrastructure.order.jpa;
 
-import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.client.ClientId;
+import be.kdg.sa.backend.domain.order.*;
+import be.kdg.sa.backend.domain.order.orderline.DishId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

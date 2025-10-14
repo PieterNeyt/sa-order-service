@@ -1,11 +1,11 @@
-package be.kdg.sa.backend.domain;
+package be.kdg.sa.backend.domain.order.orderline;
 
 import org.springframework.util.Assert;
 
 import java.util.UUID;
 
-public record RestaurantId(UUID id) {
-    public RestaurantId {
+public record DishId(UUID id) {
+    public DishId {
         Assert.notNull(id, "id must not be null");
     }
 }

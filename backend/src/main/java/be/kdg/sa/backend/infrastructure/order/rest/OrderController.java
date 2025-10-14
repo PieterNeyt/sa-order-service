@@ -1,7 +1,7 @@
 package be.kdg.sa.backend.infrastructure.order.rest;
 
-import be.kdg.sa.backend.domain.Order;
-import be.kdg.sa.backend.domain.OrderRepository;
+import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.OrderRepository;
 import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.PostMapping;

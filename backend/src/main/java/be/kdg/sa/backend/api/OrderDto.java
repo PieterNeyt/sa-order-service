@@ -1,7 +1,7 @@
 package be.kdg.sa.backend.api;
 
-import be.kdg.sa.backend.domain.Order;
-import be.kdg.sa.backend.domain.OrderLine;
+import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;

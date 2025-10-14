@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.domain;
+package be.kdg.sa.backend.domain.client;
 
 import org.springframework.util.Assert;
 

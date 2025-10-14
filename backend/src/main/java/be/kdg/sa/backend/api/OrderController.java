@@ -2,7 +2,7 @@ package be.kdg.sa.backend.api;
 
 
 import be.kdg.sa.backend.application.OrderService;
-import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import org.springframework.http.ResponseEntity;
