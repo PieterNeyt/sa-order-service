@@ -2,8 +2,9 @@ import "./css/style.css"
 import "./css/restaurant.css"
 import {type OrderinformationDto, showDishes, showRestaurants} from "./ts/presenter.ts";
 import {checkout, prepareCheckout} from "./ts/domain/OrderLine.ts";
+import {initNavbar} from "./ts/navbarLoader.ts";
 
-
+initNavbar()
 showRestaurants()
 showDishes()
 

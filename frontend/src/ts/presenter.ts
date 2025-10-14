@@ -48,7 +48,7 @@ export async function showDishes(){
         const params = new URLSearchParams(window.location.search);
         const restaurantId = params.get('id');
 
-        const response = await fetch(`http://localhost:8080/api/restaurant/${restaurantId}/dishes`, {method: "GET"});
+        const response = await fetch(`http://localhost:9090/api/order/${restaurantId}/dishes`, {method: "GET"});
         const restaurant: RestaurantDto = await response.json();
         const html = restaurant.dishes
             .map(item => `
