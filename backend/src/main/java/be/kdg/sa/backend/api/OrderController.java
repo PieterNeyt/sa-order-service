@@ -60,14 +60,15 @@ public class OrderController {
 
     @GetMapping("/restaurants")
     public ResponseEntity<List<GetAllRestaurantDto>> getRestaurants() {
-       List<Restaurant> restaurants = orderService.getRestaurants();
+       List<AllRestaurant> restaurants = orderService.getRestaurants();
        return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
     }
-    @GetMapping("{restaurantId}/dished")
-    public ResponseEntity<List<GetAllRestaurantDto>> getDishes(@PathVariable("restaurantId") UUID restaurantId) {
-        List<Restaurant> restaurants = orderService.getRestaurants();
-        return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
+    @GetMapping("/{restaurantId}/dishes")
+    public ResponseEntity<RestaurantDto> getDishes(@PathVariable("restaurantId") UUID restaurantId) {
+        Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
+        return ResponseEntity.ok(RestaurantDto.from(restaurant));
     }
+
     @GetMapping("/restaurants/{id}")
     public ResponseEntity<RestaurantDto> getRestaurantWithDishes(@PathVariable("id") UUID restaurantId) {
         Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);

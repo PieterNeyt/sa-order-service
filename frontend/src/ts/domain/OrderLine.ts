@@ -55,22 +55,40 @@ function addToWinkelMandje(order: Order) {
     shoppingCart.innerHTML=html
 }
 
-export async function addNewOrderLine(orderId:string,restaurantId:string,orderLine:ShoppingCartItem){
-    console.log(restaurantId)
+export async function addNewOrderLine(orderId: string, restaurantId: string, orderLine: ShoppingCartItem) {
+    console.log(restaurantId);
+
+    // Haal JWT token op uit sessionStorage
+    const token = sessionStorage.getItem('jwt_token');
+
+    if (!token) {
+        alert('Niet ingelogd! Log eerst in.');
+        throw new Error('Niet ingelogd! Log eerst in.');
+    }
+
     const response = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/${restaurantId}`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(orderLine)
     });
 
+    if (response.status === 401) {
+        // Token is verlopen of ongeldig
+        sessionStorage.removeItem('jwt_token');
+        alert('Sessie verlopen. Log opnieuw in.');
+        throw new Error('Sessie verlopen. Log opnieuw in.');
+    }
+
     if (!response.ok) {
+        alert(`HTTP error! Status: ${response.status}`);
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const data:Order = await response.json();
-    return data
+    const data: Order = await response.json();
+    return data;
 }
 
 export async function prepareCheckout(orderId: string, restaurantId: string) {
