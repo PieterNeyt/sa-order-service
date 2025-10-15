@@ -19,7 +19,7 @@ export function setupDishes() {
                 name:dish.name,
                 preparationTime: dish.preparationTime
             }
-            const order:Order = await addNewOrderLine(orderId.value,dish.RestaurantId, orderLineDto);
+            const order:Order = await addNewOrderLine(orderId.value,dish.restaurantId, orderLineDto);
             if(order.orderId)
                 orderId.value = order.orderId
 
@@ -29,7 +29,7 @@ export function setupDishes() {
 }
 
 async function getInfoOfDish(dishId: string) {
-    const response = await fetch(`http://localhost:8080/api/restaurant/dish/${dishId}`, {
+    const response = await fetch(`http://localhost:9090/api/order/dish/${dishId}`, {
         method: "GET"
     });
 
@@ -56,6 +56,7 @@ function addToWinkelMandje(order: Order) {
 }
 
 export async function addNewOrderLine(orderId:string,restaurantId:string,orderLine:ShoppingCartItem){
+    console.log(restaurantId)
     const response = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/${restaurantId}`, {
         method: "POST",
         headers: {

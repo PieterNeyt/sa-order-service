@@ -6,7 +6,8 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: 'index.html',
-                restaurant: 'restaurantPage.html'
+                restaurant: 'restaurantPage.html',
+                checkout: 'checkOutPage.html'
             }
         }
        // outDir: "../backend/src/main/resources/static",

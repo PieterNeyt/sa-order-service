@@ -86,37 +86,20 @@ export interface Restaurant{
     priceCategory: string
     logo:string
 }
-// main interfaces
+
 export interface RestaurantDto {
-    id: string; // UUID
-    ownerId: string; // UUID
-    addressId: string; // UUID
-    restaurantType: string; // BUFFET, etc.
+    id: string;
     name: string;
-    email: string;
-    logo: string;
     dishes: DishDto[];
-    isOpen: boolean;
-    priceCategory: string; // NORMAL, etc.
-    openingHours: OpeningHourDto[]; // leeg of gevuld
 }
 
 export interface DishDto {
-    id: string; // UUID
-    RestaurantId: string; // let op hoofdletter R, zoals in JSON
+    id: string;
+    restaurantId:string;
     name: string;
     description: string;
     price: number;
-    dishState: string; // NOT_PUBLISHED, etc.
-    restaurantId:string;
     preparationTime:number;
-}
-
-
-export interface OpeningHourDto {
-    dayOfWeek: string; // MONDAY, TUESDAY, …
-    openingTime: string; // HH:mm
-    closingTime: string; // HH:mm
 }
 
 export interface OrderinformationDto {

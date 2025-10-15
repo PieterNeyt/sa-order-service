@@ -2,7 +2,8 @@ package be.kdg.sa.backend.api;
 
 
 import be.kdg.sa.backend.application.OrderService;
-import be.kdg.sa.backend.domain.*;
+import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,6 +67,16 @@ public class OrderController {
     public ResponseEntity<List<GetAllRestaurantDto>> getDishes(@PathVariable("restaurantId") UUID restaurantId) {
         List<Restaurant> restaurants = orderService.getRestaurants();
         return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
+    }
+    @GetMapping("/restaurants/{id}")
+    public ResponseEntity<RestaurantDto> getRestaurantWithDishes(@PathVariable("id") UUID restaurantId) {
+        Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
+        return ResponseEntity.ok(RestaurantDto.from(restaurant));
+    }
+    @GetMapping("/dish/{id}")
+    public ResponseEntity<RestaurantDto.DishDto> getDishById(@PathVariable("id") UUID dishId) {
+        Restaurant.Dish dish = orderService.getDishById(dishId);
+        return ResponseEntity.ok(RestaurantDto.DishDto.from(dish));
     }
 
 

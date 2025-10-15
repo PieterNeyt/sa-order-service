@@ -1,5 +1,6 @@
-package be.kdg.sa.backend.domain;
+package be.kdg.sa.backend.domain.client;
 
+import be.kdg.sa.backend.domain.order.Order;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

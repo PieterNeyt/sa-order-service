@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure;
+package be.kdg.sa.backend.infrastructure.restaurantcatalog;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

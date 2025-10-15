@@ -21,8 +21,7 @@ public class RabbitMQTopology {
     }
 
     @Bean
-    Binding helloQueueToDemoExchangeBinding() {
-        return BindingBuilder.bind(orderQueue()).to(orderExchange()).with("say.hello.*");
+    Binding OrderQueToPlaceExgangeBinding() {
+        return BindingBuilder.bind(orderQueue()).to(orderExchange()).with("order.place.*");
     }
-
 }

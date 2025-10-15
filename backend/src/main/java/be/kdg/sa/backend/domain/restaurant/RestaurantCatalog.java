@@ -2,7 +2,12 @@ package be.kdg.sa.backend.domain.restaurant;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface RestaurantCatalog {
-    Optional<List<Restaurant>> getRestaurants();
+    Optional<List<AllRestaurant>> getRestaurants();
+
+    Optional<Restaurant> getRestaurantById(UUID restaurantId);
+
+    Optional<Restaurant.Dish> getDishById(UUID dishId);
 }
