@@ -1,6 +1,7 @@
 package be.kdg.sa.backend.api.dto;
 
 import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.OrderState;
 import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,6 +12,7 @@ public record OrderDto(
         UUID orderId,
         UUID clientId,
         UUID restaurantId,
+        String orderState,
         List<OrderLineDto> shoppingCart
 ) {
     public static OrderDto from(final Order order) {
@@ -21,8 +23,19 @@ public record OrderDto(
                 order.getOrderId().id(),
                 order.getClientId().id(),
                 order.getRestaurantId().id(),
+                translateOrderState(order.getOrderState()),
                 lineDtos
         );
+    }
+
+    private static String translateOrderState(OrderState state) {
+        return switch (state) {
+            case NOT_PLACED -> "Nog niet geplaatst";
+            case PLACED -> "Geplaatst";
+            case NOT_ACCEPTED -> "Nog niet geaccepteerd";
+            case ACCEPTED -> "Bestelling geaccepteerd";
+            case CANCELED -> "Bestelling afgezegd";
+        };
     }
 
     public record OrderLineDto(
@@ -41,6 +54,5 @@ public record OrderDto(
                     orderLine.getPreparationTime()
             );
         }
-
     }
 }

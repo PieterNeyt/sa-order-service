@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Restaurant Selector</title>
+    <title>Order Tracking - Foodie</title>
     <link rel="stylesheet" href="src/css/style.css">
     <script type="module" src="./src/main.ts"></script>
+    <script type="module" src="./src/ts/orderTracking.ts"></script>
 </head>
 <body>
 <nav class="navbar">
@@ -15,19 +16,29 @@
     </div>
 </nav>
 
-<p>Bedankt voor je bestelling!</p>
-<p>We doen ons best om ze zo snel mogelijk te verwerken.</p>
-<p>je producten:</p>
-<ul>
-    <li>product + prijs</li>
-    <li>product + prijs</li>
-    <li>product + prijs</li>
-</ul>
-<p>totaalsom prijs:</p>
+<div id="loading">
+    <p>Order gegevens laden...</p>
+</div>
 
-<p>bestelstatus: + status</p>
+<div id="error" style="display: none;">
+    <p>Er is een fout opgetreden bij het laden van de order.</p>
+    <a href="index.html">Terug naar restaurants</a>
+</div>
 
+<div id="order-content" style="display: none;">
+    <p>Bedankt voor je bestelling!</p>
+    <p>We doen ons best om ze zo snel mogelijk te verwerken.</p>
 
+    <p>Je producten:</p>
+    <ul id="products-list">
+    </ul>
+
+    <p>Totaalsom: <strong id="total-price"></strong></p>
+
+    <p>Bestelstatus: <strong id="order-status"></strong></p>
+
+    <a href="index.html">Terug naar restaurants</a>
+</div>
 
 </body>
 </html>

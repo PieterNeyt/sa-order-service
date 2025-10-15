@@ -55,6 +55,11 @@ public class OrderController {
 
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDto> getOrder(@PathVariable("orderId") UUID orderId) {
+        Order order = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(OrderDto.from(order));
+    }
     @GetMapping("/{orderId}/shoppingCart/")
     public ResponseEntity<List<OrderDto.OrderLineDto>> getShoppingCart(@PathVariable("orderId") UUID orderId) {
         Order order = orderService.getShoppingCart(orderId);

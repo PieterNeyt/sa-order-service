@@ -38,6 +38,11 @@ public class OrderService {
         this.clientService = clientService;
     }
 
+    public Order getOrderById(UUID orderId) {
+        return this.orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
+    }
+
     public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity, UUID clientId, String name, BigDecimal price, UUID restaurantId, int preparationTime) {
         RestaurantId restaurantID = new RestaurantId(restaurantId);
 

@@ -163,6 +163,7 @@ export interface Order {
     orderId: string;
     clientId: string;
     restaurantId: string;
+    orderState: string;
     shoppingCart: ShoppingCartItem[];
 }
 export interface CheckoutRequest {
