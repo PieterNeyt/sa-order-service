@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.api;
+package be.kdg.sa.backend.api.dto;
 
 import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.order.orderline.OrderLine;

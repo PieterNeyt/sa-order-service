@@ -1,6 +1,7 @@
 package be.kdg.sa.backend.application;
 
 
+import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
 import be.kdg.sa.backend.domain.client.ClientId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.order.Order;
@@ -10,6 +11,8 @@ import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
+import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final RestaurantCatalog restaurantCatalog;
@@ -35,7 +39,7 @@ public class OrderService {
         RestaurantId restaurantID = new RestaurantId(restaurantId);
 
         Order order = this.orderRepository.findById(orderId)
-                .orElseGet(() -> new Order(restaurantID,new ClientId(clientId)));
+                .orElseGet(() -> new Order(restaurantID, new ClientId(clientId)));
 
         order.addDish(
                 new DishId(dishId),
@@ -56,15 +60,20 @@ public class OrderService {
     }
 
     public Order placeOrder(UUID orderId) {
-        var order = this.orderRepository.findById(orderId)
+        Order order = this.orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
 
-        order.place();
-        this.orderRepository.save(order);
+        restaurantCatalog.checkShoppingCart(
+                CheckoutDto.fromOrderDomain(order)
+        );
 
+
+        order.place();
+
+        this.orderRepository.save(order);
         this.rabbitTemplate.convertAndSend(
                 RabbitMQTopology.ORDER_EXCHANGE_NAME,
-                "order.place."+order.getOrderId().id(),
+                "order.place." + order.getOrderId().id(),
                 new OrderMessage(order.getOrderId().id(),
                         order.getRestaurantId().id(),
                         order.calculateTotalPrice())
@@ -85,5 +94,9 @@ public class OrderService {
 
     public Restaurant.Dish getDishById(UUID dishId) {
         return restaurantCatalog.getDishById(dishId).orElseThrow();
+    }
+
+    public CheckoutResponseDto prepareCheckout(CheckoutDto checkoutDto) {
+        return restaurantCatalog.checkShoppingCart(checkoutDto);
     }
 }

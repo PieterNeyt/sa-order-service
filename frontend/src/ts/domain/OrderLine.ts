@@ -1,4 +1,4 @@
-import type {DishDto, OrderinformationDto} from "../presenter.ts";
+import type {DishDto} from "../presenter.ts";
 
 
 export function setupDishes() {
@@ -127,52 +127,22 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
 }
 
 
-export async function checkout(orderId: string,restaurantId: string, orderInfo: OrderinformationDto) {
+export async function checkout(orderId: string) {
+    const jwttoken = sessionStorage.getItem("jwt_token")
 
-    const cartResponse = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/`, {
-        method: "GET"
-    });
-    if (!cartResponse.ok) {
-        throw new Error(`Fout bij ophalen van winkelmand (status: ${cartResponse.status})`);
-    }
-
-    const shoppingCart = await cartResponse.json();
-
-    // Maak checkoutRequest-object aan dat het restaurant verwacht
-    const checkoutRequest = {
-        orderId: orderId,
-        restaurantId: restaurantId,
-        customer: orderInfo,
-        items: shoppingCart.map((item: any) => ({
-            dishId: item.dishId,
-            name: item.name,
-            preparationTime: item.preparationTime,
-            price: item.price
-        }))
-    };
-
-
-    const response = await fetch(`http://localhost:8080/api/restaurant/checkout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(checkoutRequest)
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `HTTP error! Status: ${response.status}`);
-    }
+    if(!jwttoken)
+        throw new Error('Log in')
 
     const updateOrderState = await fetch(`http://localhost:9090/api/order/${orderId}/placeOrder`, {
-        method: "PATCH"
-    });
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${jwttoken}`,
+        }}
+    );
 
     if (!updateOrderState.ok) {
         throw new Error(`Fout bij updaten van orderstatus: ${updateOrderState.status}`);
     }
-
-
-    return await response.json();
 }
 
 

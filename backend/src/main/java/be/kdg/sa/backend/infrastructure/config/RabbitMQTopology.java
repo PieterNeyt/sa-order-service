@@ -12,7 +12,7 @@ public class RabbitMQTopology {
 
     @Bean
     TopicExchange orderExchange() {
-        return new TopicExchange(ORDER_EXCHANGE_NAME);
+        return new TopicExchange(ORDER_EXCHANGE_NAME,true,false);
     }
 
     @Bean
@@ -21,7 +21,7 @@ public class RabbitMQTopology {
     }
 
     @Bean
-    Binding OrderQueToPlaceExgangeBinding() {
+    Binding orderQueToPlaceExgangeBinding() {
         return BindingBuilder.bind(orderQueue()).to(orderExchange()).with("order.place.*");
     }
 }

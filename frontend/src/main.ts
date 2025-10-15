@@ -52,10 +52,12 @@ if (checkoutBtn) {
         const city = (document.getElementById("city") as HTMLInputElement).value;
 
         // OrderinformationDto vullen
+        //TODO terug toeveogen aan order zetten
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
+        orderinformationDto.name
 
         try {
-            const result = await checkout(orderId,restaurantId, orderinformationDto);
+            const result = await checkout(orderId);
             console.log("Checkout successful:", result);
 
         } catch (error: any) {

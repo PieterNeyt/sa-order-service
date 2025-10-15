@@ -1,10 +1,15 @@
 package be.kdg.sa.backend.api;
 
 
+import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
+import be.kdg.sa.backend.api.dto.GetAllRestaurantDto;
+import be.kdg.sa.backend.api.dto.OrderDto;
+import be.kdg.sa.backend.api.dto.RestaurantDto;
 import be.kdg.sa.backend.application.OrderService;
 import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
+import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,11 +51,19 @@ public class OrderController {
         return ResponseEntity.ok(OrderDto.from(order));
     }
 
+    @PostMapping("/prepareCheckout")
+    public ResponseEntity<CheckoutResponseDto> prepareCheckout(@RequestBody CheckoutDto checkoutDto) {
+        CheckoutResponseDto response = orderService.prepareCheckout(checkoutDto);
+        return ResponseEntity.ok(response);
+
+    }
+
     @GetMapping("/{orderId}/shoppingCart/")
     public ResponseEntity<List<OrderDto.OrderLineDto>> getShoppingCart(@PathVariable("orderId") UUID orderId) {
         Order order = orderService.getShoppingCart(orderId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
+
     @PreAuthorize("hasAuthority('client')")
     @PatchMapping("/{orderId}/placeOrder")
     public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(@PathVariable UUID orderId) {

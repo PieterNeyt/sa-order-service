@@ -1,5 +1,6 @@
 package be.kdg.sa.backend.infrastructure.restaurantcatalog;
 
+import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
@@ -29,7 +30,7 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
                     .get()
                     .uri("")
                     .retrieve()
-                    .body(new ParameterizedTypeReference<List<AllRestaurantResponse>>() {});
+                    .body(new ParameterizedTypeReference<>() {});
 
             return Optional.ofNullable(restaurants.stream().map(AllRestaurant::from).toList());
 
@@ -68,6 +69,21 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
 
         } catch (final HttpStatusCodeException e) {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public CheckoutResponseDto checkShoppingCart(CheckoutDto checkoutDto) {
+        try {
+            return restClient
+                    .post()
+                    .uri("/checkout")
+                    .body(checkoutDto)
+                    .retrieve()
+                    .body(CheckoutResponseDto.class);
+
+        } catch (final HttpStatusCodeException e) {
+            throw new HttpStatusCodeException(e.getStatusCode(),e.getMessage()){};
         }
     }
 
