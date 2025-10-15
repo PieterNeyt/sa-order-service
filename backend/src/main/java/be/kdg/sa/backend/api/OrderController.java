@@ -1,10 +1,7 @@
 package be.kdg.sa.backend.api;
 
 
-import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
-import be.kdg.sa.backend.api.dto.GetAllRestaurantDto;
-import be.kdg.sa.backend.api.dto.OrderDto;
-import be.kdg.sa.backend.api.dto.RestaurantDto;
+import be.kdg.sa.backend.api.dto.*;
 import be.kdg.sa.backend.application.OrderService;
 import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
@@ -29,7 +26,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    private UUID getOwnerIdFromToken(@AuthenticationPrincipal Jwt token) {
+    private UUID getIdFromToken(@AuthenticationPrincipal Jwt token) {
         return UUID.fromString(token.getClaimAsString("sub"));
     }
 
@@ -43,7 +40,7 @@ public class OrderController {
                 orderId,
                 orderDto.dishId(),
                 orderDto.quantity(),
-                getOwnerIdFromToken(token),
+                getIdFromToken(token),
                 orderDto.name(),
                 orderDto.price(),
                 restaurantId,
@@ -66,8 +63,13 @@ public class OrderController {
 
     @PreAuthorize("hasAuthority('client')")
     @PatchMapping("/{orderId}/placeOrder")
-    public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(@PathVariable UUID orderId) {
-        Order order = orderService.placeOrder(orderId);
+    public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(
+            @PathVariable UUID orderId,
+            @RequestBody OrderInformationDto orderInformation,
+            @AuthenticationPrincipal Jwt token) {
+
+        UUID clientId = getIdFromToken(token);
+        Order order = orderService.placeOrder(orderId, orderInformation, clientId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
 

@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure.order.jpa;
+package be.kdg.sa.backend.infrastructure.client.jpa;
 
 import be.kdg.sa.backend.domain.client.Address;
 import jakarta.persistence.*;
@@ -16,19 +16,19 @@ public class JpaAddressEntity {
     @Column(columnDefinition = "uuid")
     private UUID addressId;
 
-    @Column(nullable = false)
+
     private String street;
 
-    @Column(nullable = false)
+
     private String streetNumber;
 
-    @Column(nullable = false)
+
     private String city;
 
-    @Column(nullable = false)
+
     private String postalCode;
 
-    @Column(nullable = false)
+
     private String country;
 
     public JpaAddressEntity() {}
@@ -43,6 +43,9 @@ public class JpaAddressEntity {
     }
 
     public static JpaAddressEntity fromDomain(Address address) {
+        if (address == null) {
+            return null;
+        }
         return new JpaAddressEntity(
                 address.getAddressId(),
                 address.getStreet(),

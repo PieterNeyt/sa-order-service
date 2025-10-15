@@ -2,6 +2,7 @@ package be.kdg.sa.backend.application;
 
 
 import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
+import be.kdg.sa.backend.api.dto.OrderInformationDto;
 import be.kdg.sa.backend.domain.client.ClientId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.order.Order;
@@ -28,11 +29,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RestaurantCatalog restaurantCatalog;
     private final RabbitTemplate rabbitTemplate;
+    private final ClientService clientService;
 
-    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate) {
+    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate, ClientService clientService) {
         this.orderRepository = orderRepository;
         this.restaurantCatalog = restaurantCatalog;
         this.rabbitTemplate = rabbitTemplate;
+        this.clientService = clientService;
     }
 
     public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity, UUID clientId, String name, BigDecimal price, UUID restaurantId, int preparationTime) {
@@ -59,7 +62,7 @@ public class OrderService {
                 .orElseThrow();
     }
 
-    public Order placeOrder(UUID orderId) {
+    public Order placeOrder(UUID orderId, OrderInformationDto orderInformation, UUID clientId) {
         Order order = this.orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
 
@@ -67,6 +70,8 @@ public class OrderService {
                 CheckoutDto.fromOrderDomain(order)
         );
 
+
+        clientService.saveOrUpdateClient(clientId, orderInformation);
 
         order.place();
 

@@ -1,4 +1,4 @@
-import type {DishDto} from "../presenter.ts";
+import type {DishDto, OrderinformationDto} from "../presenter.ts";
 
 
 export function setupDishes() {
@@ -127,7 +127,7 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
 }
 
 
-export async function checkout(orderId: string) {
+export async function checkout(orderId: string, orderinformationDto: OrderinformationDto) {
     const jwttoken = sessionStorage.getItem("jwt_token")
 
     if(!jwttoken)
@@ -137,8 +137,10 @@ export async function checkout(orderId: string) {
         method: "PATCH",
         headers: {
             "Authorization": `Bearer ${jwttoken}`,
-        }}
-    );
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderinformationDto)
+    });
 
     if (!updateOrderState.ok) {
         throw new Error(`Fout bij updaten van orderstatus: ${updateOrderState.status}`);

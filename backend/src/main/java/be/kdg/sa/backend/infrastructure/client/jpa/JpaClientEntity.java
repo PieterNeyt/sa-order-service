@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.infrastructure.order.jpa;
+package be.kdg.sa.backend.infrastructure.client.jpa;
 
 import be.kdg.sa.backend.domain.client.Address;
 import be.kdg.sa.backend.domain.client.Client;
@@ -18,27 +18,28 @@ public class JpaClientEntity {
     @Column(columnDefinition = "uuid")
     private UUID clientId;
 
-    @Column(nullable = false)
+
     private String firstName;
 
-    @Column(nullable = false)
+
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
+
     private String phoneNumber;
 
-    @Column(nullable = false)
+
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(name = "address_id")
     private JpaAddressEntity address;
 
-    public JpaClientEntity() {}
+    public JpaClientEntity() {
+    }
 
     public JpaClientEntity(UUID clientId, String firstName, String lastName, String email, String phoneNumber, Date birthDate, JpaAddressEntity address) {
         this.clientId = clientId;
@@ -51,7 +52,10 @@ public class JpaClientEntity {
     }
 
     public static JpaClientEntity fromDomain(Client client) {
-        JpaAddressEntity addressEntity = JpaAddressEntity.fromDomain(client.getAddress());
+        JpaAddressEntity addressEntity = null;
+        if (client.getAddress() != null) {
+            addressEntity = JpaAddressEntity.fromDomain(client.getAddress());
+        }
 
         return new JpaClientEntity(
                 client.getClientId(),
@@ -65,7 +69,10 @@ public class JpaClientEntity {
     }
 
     public Client toDomain() {
-        Address domainAddress = address.toDomain();
+        Address domainAddress = null;
+        if (address != null) {
+            domainAddress = address.toDomain();
+        }
 
         Client client = new Client(
                 domainAddress,

@@ -54,11 +54,13 @@ if (checkoutBtn) {
         // OrderinformationDto vullen
         //TODO terug toeveogen aan order zetten
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
-        orderinformationDto.name
+
 
         try {
-            const result = await checkout(orderId);
+            const result = await checkout(orderId,orderinformationDto);
             console.log("Checkout successful:", result);
+            window.location.href = `orderTracking.html?orderId=${encodeURIComponent(orderId)}`;
+
 
         } catch (error: any) {
             console.error("Checkout failed:", error);
