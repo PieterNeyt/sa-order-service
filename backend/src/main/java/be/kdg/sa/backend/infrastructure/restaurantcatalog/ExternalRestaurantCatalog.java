@@ -1,6 +1,8 @@
 package be.kdg.sa.backend.infrastructure.restaurantcatalog;
 
 import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
+import be.kdg.sa.backend.domain.order.RestaurantId;
+import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
@@ -41,11 +43,11 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
     }
 
     @Override
-    public Optional<Restaurant> getRestaurantById(UUID restaurantId) {
+    public Optional<Restaurant> getRestaurantById(RestaurantId restaurantId) {
         try {
             final RestaurantResponse restaurants = restClient
                     .get()
-                    .uri("/"+restaurantId)
+                    .uri("/"+restaurantId.id())
                     .retrieve()
                     .body(RestaurantResponse.class);
 
@@ -57,11 +59,11 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
     }
 
     @Override
-    public Optional<Restaurant.Dish> getDishById(UUID dishId) {
+    public Optional<Restaurant.Dish> getDishById(DishId dishId) {
         try {
             final RestaurantResponse.DishResponse dish = restClient
                     .get()
-                    .uri("/dish/"+dishId)
+                    .uri("/dish/"+dishId.id())
                     .retrieve()
                     .body(RestaurantResponse.DishResponse.class);
 

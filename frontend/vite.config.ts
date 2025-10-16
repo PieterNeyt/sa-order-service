@@ -7,7 +7,8 @@ export default defineConfig({
             input: {
                 main: 'index.html',
                 restaurant: 'restaurantPage.html',
-                checkout: 'checkOutPage.html'
+                checkout: 'checkOutPage.html',
+                orderTracking: 'orderTracking.html'
             }
         }
        // outDir: "../backend/src/main/resources/static",

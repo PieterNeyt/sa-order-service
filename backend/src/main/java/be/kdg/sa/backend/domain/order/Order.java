@@ -3,6 +3,7 @@ package be.kdg.sa.backend.domain.order;
 import be.kdg.sa.backend.domain.client.ClientId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.order.orderline.OrderLine;
+import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.util.Assert;
@@ -19,6 +20,7 @@ public class Order {
     private final ClientId clientId;
     private final RestaurantId restaurantId;
     private OrderState orderState;
+    private String rejectionMessage;
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
@@ -30,12 +32,13 @@ public class Order {
         this.orderState = OrderState.NOT_PLACED;
     }
 
-    public Order(OrderId orderId, RestaurantId restaurantId, ClientId clientId, OrderState orderState) {
+    public Order(OrderId orderId, RestaurantId restaurantId, ClientId clientId, OrderState orderState,String rejectionMessage) {
         this.orderState = orderState;
         Assert.notNull(restaurantId, "restaurantId must not be null");
         this.restaurantId = restaurantId;
         this.orderId = orderId;
         this.clientId = clientId;
+        this.rejectionMessage = rejectionMessage;
     }
 
 
@@ -54,6 +57,9 @@ public class Order {
 
 
     public void place() {
+        if(this.orderState != OrderState.NOT_PLACED)
+            throw new  IllegalStateException("Order cant be placed");
+
         this.orderState=OrderState.PLACED;
     }
 
@@ -61,5 +67,46 @@ public class Order {
         return shoppingCart.stream()
                 .map(orderLine -> orderLine.getPrice().multiply(BigDecimal.valueOf(orderLine.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void accept() {
+        if(this.orderState != OrderState.PLACED)
+            throw new  IllegalStateException("Order isnt placed anymore");
+
+        this.orderState=OrderState.ACCEPTED;
+
+    }
+
+    public void ready() {
+        if(this.orderState != OrderState.ACCEPTED)
+            throw new  IllegalStateException("Order isnt accepted/ready anymore");
+
+        this.orderState=OrderState.READY_FOR_PICKUP;
+    }
+
+    public void pickedUp() {
+        if(this.orderState != OrderState.READY_FOR_PICKUP)
+            throw new  IllegalStateException("Order isnt ready for pick up");
+
+        this.orderState=OrderState.PICKED_UP;
+    }
+
+    public void deliverd() {
+        if(this.orderState != OrderState.PICKED_UP)
+            throw new  IllegalStateException("Order isnt picked up");
+
+        this.orderState=OrderState.DELIVERD;
+    }
+
+    public void denied(String msg) {
+        if(this.orderState != OrderState.PLACED)
+            throw new  IllegalStateException("Order isnt placed anymore");
+
+        rejectedMessage(msg);
+        this.orderState=OrderState.DENIED;
+    }
+    public void rejectedMessage(String msg) {
+        Assert.hasText(msg, "msg must not be empty");
+        this.rejectionMessage = msg;
     }
 }

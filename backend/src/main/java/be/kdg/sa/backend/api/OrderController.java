@@ -4,6 +4,9 @@ package be.kdg.sa.backend.api;
 import be.kdg.sa.backend.api.dto.*;
 import be.kdg.sa.backend.application.OrderService;
 import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.OrderId;
+import be.kdg.sa.backend.domain.order.RestaurantId;
+import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
@@ -37,14 +40,15 @@ public class OrderController {
                                                           @RequestBody OrderDto.OrderLineDto orderDto,
                                                           @AuthenticationPrincipal Jwt token) {
         Order order = orderService.addDishToShoppingCart(
-                orderId,
-                orderDto.dishId(),
+                new OrderId(orderId),
+                new DishId(orderDto.dishId()),
+                new RestaurantId(restaurantId),
                 orderDto.quantity(),
                 getIdFromToken(token),
                 orderDto.name(),
                 orderDto.price(),
-                restaurantId,
                 orderDto.preparationTime());
+
         return ResponseEntity.ok(OrderDto.from(order));
     }
 
@@ -57,12 +61,13 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable("orderId") UUID orderId) {
-        Order order = orderService.getOrderById(orderId);
+        Order order = orderService.getOrderById(new OrderId(orderId));
         return ResponseEntity.ok(OrderDto.from(order));
     }
+
     @GetMapping("/{orderId}/shoppingCart/")
     public ResponseEntity<List<OrderDto.OrderLineDto>> getShoppingCart(@PathVariable("orderId") UUID orderId) {
-        Order order = orderService.getShoppingCart(orderId);
+        Order order = orderService.getShoppingCart(new OrderId(orderId));
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
 
@@ -74,7 +79,7 @@ public class OrderController {
             @AuthenticationPrincipal Jwt token) {
 
         UUID clientId = getIdFromToken(token);
-        Order order = orderService.placeOrder(orderId, orderInformation, clientId);
+        Order order = orderService.placeOrder(new OrderId(orderId), orderInformation, clientId);
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
 
@@ -85,18 +90,18 @@ public class OrderController {
     }
     @GetMapping("/{restaurantId}/dishes")
     public ResponseEntity<RestaurantDto> getDishes(@PathVariable("restaurantId") UUID restaurantId) {
-        Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
+        Restaurant restaurant = orderService.getRestaurantWithDishes(new RestaurantId(restaurantId));
         return ResponseEntity.ok(RestaurantDto.from(restaurant));
     }
 
     @GetMapping("/restaurants/{id}")
     public ResponseEntity<RestaurantDto> getRestaurantWithDishes(@PathVariable("id") UUID restaurantId) {
-        Restaurant restaurant = orderService.getRestaurantWithDishes(restaurantId);
+        Restaurant restaurant = orderService.getRestaurantWithDishes(new RestaurantId(restaurantId));
         return ResponseEntity.ok(RestaurantDto.from(restaurant));
     }
     @GetMapping("/dish/{id}")
     public ResponseEntity<RestaurantDto.DishDto> getDishById(@PathVariable("id") UUID dishId) {
-        Restaurant.Dish dish = orderService.getDishById(dishId);
+        Restaurant.Dish dish = orderService.getDishById(new DishId(dishId));
         return ResponseEntity.ok(RestaurantDto.DishDto.from(dish));
     }
 

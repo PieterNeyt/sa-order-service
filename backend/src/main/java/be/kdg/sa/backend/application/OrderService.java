@@ -3,7 +3,9 @@ package be.kdg.sa.backend.application;
 
 import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
 import be.kdg.sa.backend.api.dto.OrderInformationDto;
+import be.kdg.sa.backend.domain.NotFoundException;
 import be.kdg.sa.backend.domain.client.ClientId;
+import be.kdg.sa.backend.domain.order.OrderId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
 import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.order.OrderRepository;
@@ -12,8 +14,10 @@ import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
+import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.NotFound;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,20 +42,27 @@ public class OrderService {
         this.clientService = clientService;
     }
 
-    public Order getOrderById(UUID orderId) {
+    public Order getOrderById(OrderId orderId) {
         return this.orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
+                .orElseThrow(orderId::notFound);
     }
 
-    public Order addDishToShoppingCart(UUID orderId, UUID dishId, int quantity, UUID clientId, String name, BigDecimal price, UUID restaurantId, int preparationTime) {
-        RestaurantId restaurantID = new RestaurantId(restaurantId);
+    public Order addDishToShoppingCart(
+            OrderId orderId,
+            DishId dishId,
+            RestaurantId restaurantId,
+            int quantity,
+            UUID clientId,
+            String name,
+            BigDecimal price,
+            int preparationTime) {
 
-        Order order = this.orderRepository.findById(orderId)
-                .orElseGet(() -> new Order(restaurantID, new ClientId(clientId)));
+        final Order order = this.orderRepository.findById(orderId)
+                .orElseGet(() -> new Order(restaurantId, new ClientId(clientId)));
 
         order.addDish(
-                new DishId(dishId),
-                restaurantID,
+                dishId,
+                restaurantId,
                 price,
                 quantity,
                 name,
@@ -62,19 +73,19 @@ public class OrderService {
         return order;
     }
 
-    public Order getShoppingCart(UUID orderId) {
+    public Order getShoppingCart(OrderId orderId) {
         return this.orderRepository.findById(orderId)
-                .orElseThrow();
+                .orElseThrow(orderId::notFound);
     }
 
-    public Order placeOrder(UUID orderId, OrderInformationDto orderInformation, UUID clientId) {
-        Order order = this.orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order niet gevonden"));
+    public Order placeOrder(OrderId orderId, OrderInformationDto orderInformation, UUID clientId) {
+
+        final Order order = this.orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
 
         restaurantCatalog.checkShoppingCart(
                 CheckoutDto.fromOrderDomain(order)
         );
-
 
         clientService.saveOrUpdateClient(clientId, orderInformation);
 
@@ -95,18 +106,70 @@ public class OrderService {
 
     public List<AllRestaurant> getRestaurants() {
         return restaurantCatalog.getRestaurants()
-                .orElseThrow(() -> new RuntimeException("Restaurant niet gevonden"));
+                .orElseThrow(() -> new NotFoundException("Restaurants niet gevonden"));
     }
 
-    public Restaurant getRestaurantWithDishes(UUID restaurantId) {
-        return restaurantCatalog.getRestaurantById(restaurantId).orElseThrow();
+    public Restaurant getRestaurantWithDishes(RestaurantId restaurantId) {
+        return restaurantCatalog.getRestaurantById(restaurantId).
+                orElseThrow(restaurantId::notFound);
     }
 
-    public Restaurant.Dish getDishById(UUID dishId) {
-        return restaurantCatalog.getDishById(dishId).orElseThrow();
+    public Restaurant.Dish getDishById(DishId dishId) {
+        return restaurantCatalog.getDishById(dishId)
+                .orElseThrow(dishId::notFound);
     }
 
     public CheckoutResponseDto prepareCheckout(CheckoutDto checkoutDto) {
         return restaurantCatalog.checkShoppingCart(checkoutDto);
+    }
+
+    public void orderAccepted(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.accept();
+        orderRepository.save(order);
+    }
+
+    public void orderDenied(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.denied(msg.message());
+        orderRepository.save(order);
+    }
+
+    public void orderReady(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.ready();
+        orderRepository.save(order);
+    }
+
+    public void orderPickedUp(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.pickedUp();
+        orderRepository.save(order);
+    }
+
+    public void orderDeliverd(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.deliverd();
+        orderRepository.save(order);
     }
 }

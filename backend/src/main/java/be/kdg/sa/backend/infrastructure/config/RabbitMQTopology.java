@@ -14,8 +14,8 @@ public class RabbitMQTopology {
     public static final String ORDER_DENY_QUEUE = "order-deny-queue";
     public static final String ORDER_READY_QUEUE = "order-ready-queue";
 
-    public static final String ORDER_RESPONSE_PICKEDUP_QUEUE_NAME = "order-pickedup-response-queue";
-    public static final String ORDER_RESPONSE_DELIVERD_QUEUE_NAME = "order-deliverd-response-queue";
+    public static final String PICKEDUP_QUEUE_NAME = "pickedup-response-queue";
+    public static final String DELIVERD_QUEUE_NAME = "deliverd-response-queue";
 
     //sturen van msg naar restaurant service
     @Bean
@@ -55,12 +55,12 @@ public class RabbitMQTopology {
 
     @Bean
     Queue deliveryPickedupResponseQueue() {
-        return QueueBuilder.nonDurable(ORDER_RESPONSE_PICKEDUP_QUEUE_NAME).build();
+        return QueueBuilder.nonDurable(PICKEDUP_QUEUE_NAME).build();
     }
 
     @Bean
     Queue deliveryDeliverdResponseQueue() {
-        return QueueBuilder.nonDurable(ORDER_RESPONSE_DELIVERD_QUEUE_NAME).build();
+        return QueueBuilder.nonDurable(DELIVERD_QUEUE_NAME).build();
     }
 
 

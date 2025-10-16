@@ -25,6 +25,9 @@ public class JpaOrderEntity {
     @Column(nullable = false)
     private UUID restaurantId;
 
+    @Column()
+    private String rejectionMessage;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderState orderState;
@@ -34,19 +37,21 @@ public class JpaOrderEntity {
 
     public JpaOrderEntity() {}
 
-    public JpaOrderEntity(UUID orderId, UUID clientId, UUID restaurantId,OrderState orderState) {
+    public JpaOrderEntity(UUID orderId, UUID clientId, UUID restaurantId,OrderState orderState,String rejectionMessage) {
         this.orderId = orderId;
         this.clientId = clientId;
         this.restaurantId = restaurantId;
         this.shoppingCart = new ArrayList<>();
         this.orderState = orderState;
+        this.rejectionMessage = rejectionMessage;
     }
     public static JpaOrderEntity fromDomain(Order order) {
         JpaOrderEntity orderEntity = new JpaOrderEntity(
                 order.getOrderId().id(),
                 order.getClientId().id(),
                 order.getRestaurantId().id(),
-                order.getOrderState()
+                order.getOrderState(),
+                order.getRejectionMessage()
         );
         List<JpaOrderLineEntity> orderLines = order.getShoppingCart().stream()
                 .map(orderLine -> JpaOrderLineEntity.fromDomain(orderLine,order.getOrderId().id()))
@@ -58,7 +63,8 @@ public class JpaOrderEntity {
         Order order = new Order(new OrderId(orderId),
                 new RestaurantId(restaurantId),
                 new ClientId(clientId),
-                orderState
+                orderState,
+                rejectionMessage
         );
         shoppingCart.forEach(orderLine -> order.addDish(
                new DishId(orderLine.getId().getDishId()),

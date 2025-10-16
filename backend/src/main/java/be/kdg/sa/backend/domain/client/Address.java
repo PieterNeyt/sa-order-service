@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Address {
     public UUID addressId;
     public String street;
-    public String StreetNumber;
+    public String streetNumber;
     public String city;
     public String postalCode;
     public String country;
@@ -20,7 +20,7 @@ public class Address {
     public Address(String city, String streetNumber, String street, String postalCode, String country) {
        this.addressId = UUID.randomUUID();
         this.city = city;
-        StreetNumber = streetNumber;
+        this.streetNumber = streetNumber;
         this.street = street;
         this.postalCode = postalCode;
         this.country = country;

@@ -23,18 +23,20 @@ public record OrderDto(
                 order.getOrderId().id(),
                 order.getClientId().id(),
                 order.getRestaurantId().id(),
-                translateOrderState(order.getOrderState()),
+                translateOrderState(order.getOrderState(),order.getRejectionMessage()),
                 lineDtos
         );
     }
 
-    private static String translateOrderState(OrderState state) {
+    private static String translateOrderState(OrderState state,String message) {
         return switch (state) {
             case NOT_PLACED -> "Nog niet geplaatst";
             case PLACED -> "Geplaatst";
-            case NOT_ACCEPTED -> "Nog niet geaccepteerd";
             case ACCEPTED -> "Bestelling geaccepteerd";
-            case CANCELED -> "Bestelling afgezegd";
+            case DENIED -> "Bestelling niet geaccepteerd voor volgende reden:"+message;
+            case PICKED_UP -> "bestelling is opgehaald";
+            case READY_FOR_PICKUP -> "Bestelling is klaar voor pickup";
+            case DELIVERD -> "bestelling is aangekomen";
         };
     }
 

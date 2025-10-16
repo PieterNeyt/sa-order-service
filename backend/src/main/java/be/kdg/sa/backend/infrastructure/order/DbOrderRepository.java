@@ -1,6 +1,7 @@
 package be.kdg.sa.backend.infrastructure.order;
 
 import be.kdg.sa.backend.domain.order.Order;
+import be.kdg.sa.backend.domain.order.OrderId;
 import be.kdg.sa.backend.domain.order.OrderRepository;
 import be.kdg.sa.backend.infrastructure.order.jpa.JpaOrderEntity;
 import be.kdg.sa.backend.infrastructure.order.jpa.JpaOrderRepository;
@@ -25,7 +26,7 @@ public class DbOrderRepository implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> findById(UUID id) {
-        return this.jpaOrderRepository.findById(id).map(JpaOrderEntity::toDomain);
+    public Optional<Order> findById(OrderId orderId) {
+        return this.jpaOrderRepository.findById(orderId.id()).map(JpaOrderEntity::toDomain);
     }
 }
