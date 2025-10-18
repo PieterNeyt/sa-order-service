@@ -103,7 +103,7 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
     const checkoutRequest = {
         orderId: orderId,
         restaurantId: restaurantId,
-        items: shoppingCart.map((item: any) => ({
+        items: shoppingCart.map((item: ShoppingCartItem) => ({
             dishId: item.dishId,
             name: item.name,
             preparationTime: item.preparationTime ?? 10,

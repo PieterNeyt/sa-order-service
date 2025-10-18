@@ -25,8 +25,7 @@ if (prepareCheckoutBtn) {
 
         } catch (error) {
             console.error("Checkout preparation failed:", error);
-            // @ts-ignore
-            alert(`Checkout preparation mislukt: ${error.message}`);
+            alert(`Checkout preparation mislukt`);
         }
     });
 }
@@ -52,7 +51,6 @@ if (checkoutBtn) {
         const city = (document.getElementById("city") as HTMLInputElement).value;
 
         // OrderinformationDto vullen
-        //TODO terug toeveogen aan order zetten
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
 
 
@@ -62,9 +60,9 @@ if (checkoutBtn) {
             window.location.href = `orderTracking.html?orderId=${encodeURIComponent(orderId)}`;
 
 
-        } catch (error: any) {
+        } catch (error) {
             console.error("Checkout failed:", error);
-            alert(`Checkout mislukt: ${error.message || error}`);
+            alert(`Checkout mislukt`);
         }
     });
 }
