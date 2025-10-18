@@ -2,6 +2,7 @@ package be.kdg.sa.backend.domain.order.orderline;
 
 import lombok.Getter;
 import org.jmolecules.ddd.annotation.Entity;
+import org.jmolecules.ddd.annotation.Identity;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 public class OrderLine {
+    @Identity
     private final DishId dishId;
     private final BigDecimal price;
     private final String name;
