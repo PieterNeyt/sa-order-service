@@ -6,19 +6,26 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+import lombok.EqualsAndHashCode; // Nieuwe import
+import lombok.Getter;
+// import lombok.Setter; // Verwijder deze import
+import lombok.ToString;
+import org.jmolecules.ddd.annotation.ValueObject; // Nieuwe import
+
+
+@ValueObject
 @Getter
-@Setter
 @ToString
+@EqualsAndHashCode
 public class Address {
-    public UUID addressId;
-    public String street;
-    public String streetNumber;
-    public String city;
-    public String postalCode;
-    public String country;
+
+    private final String street;
+    private final String streetNumber;
+    private final String city;
+    private final String postalCode;
+    private final String country;
 
     public Address(String city, String streetNumber, String street, String postalCode, String country) {
-       this.addressId = UUID.randomUUID();
         this.city = city;
         this.streetNumber = streetNumber;
         this.street = street;

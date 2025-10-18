@@ -34,14 +34,13 @@ public class JpaClientEntity {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id")
-    private JpaAddressEntity address;
+    @Embedded
+    private JpaAddressEmbeddable address;
 
     public JpaClientEntity() {
     }
 
-    public JpaClientEntity(UUID clientId, String firstName, String lastName, String email, String phoneNumber, Date birthDate, JpaAddressEntity address) {
+    public JpaClientEntity(UUID clientId, String firstName, String lastName, String email, String phoneNumber, Date birthDate, JpaAddressEmbeddable address) {
         this.clientId = clientId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,9 +51,9 @@ public class JpaClientEntity {
     }
 
     public static JpaClientEntity fromDomain(Client client) {
-        JpaAddressEntity addressEntity = null;
+        JpaAddressEmbeddable addressEmbeddable = null;
         if (client.getAddress() != null) {
-            addressEntity = JpaAddressEntity.fromDomain(client.getAddress());
+            addressEmbeddable = JpaAddressEmbeddable.fromDomain(client.getAddress());
         }
 
         return new JpaClientEntity(
@@ -64,7 +63,7 @@ public class JpaClientEntity {
                 client.getEmail(),
                 client.getPhoneNumber(),
                 client.getBirthDate(),
-                addressEntity
+                addressEmbeddable
         );
     }
 

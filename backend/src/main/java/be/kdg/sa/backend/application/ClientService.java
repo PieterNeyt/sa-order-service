@@ -34,22 +34,14 @@ public class ClientService {
         client.setLastName(lastName);
         client.setEmail(orderInformation.email());
 
-        // Update of maak Address
-        if (client.getAddress() == null) {
-            Address address = new Address(
-                    orderInformation.city(),
-                    "12",
-                    orderInformation.street(),
-                    orderInformation.postalcode(),
-                    "Belgium"
-            );
-            client.setAddress(address);
-        } else {
-            Address address = client.getAddress();
-            address.setStreet(orderInformation.street());
-            address.setPostalCode(orderInformation.postalcode());
-            address.setCity(orderInformation.city());
-        }
+        Address address = new Address(
+                orderInformation.city(),
+                "12",
+                orderInformation.street(),
+                orderInformation.postalcode(),
+                "Belgium"
+        );
+        client.setAddress(address);
 
         clientRepository.save(client);
     }

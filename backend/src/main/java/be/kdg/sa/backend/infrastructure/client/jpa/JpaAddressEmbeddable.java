@@ -5,36 +5,20 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
-@Entity
+@Embeddable
 @Getter
 @Setter
-@Table(name = "addresses")
-public class JpaAddressEntity {
-    @Id
-    @Column(columnDefinition = "uuid")
-    private UUID addressId;
-
-
+public class JpaAddressEmbeddable {
     private String street;
-
-
     private String streetNumber;
-
-
     private String city;
-
-
     private String postalCode;
-
-
     private String country;
 
-    public JpaAddressEntity() {}
+    public JpaAddressEmbeddable() {}
 
-    public JpaAddressEntity(UUID addressId, String street, String streetNumber, String city, String postalCode, String country) {
-        this.addressId = addressId;
+    public JpaAddressEmbeddable(String street, String streetNumber, String city, String postalCode, String country) {
+
         this.street = street;
         this.streetNumber = streetNumber;
         this.city = city;
@@ -42,12 +26,11 @@ public class JpaAddressEntity {
         this.country = country;
     }
 
-    public static JpaAddressEntity fromDomain(Address address) {
+    public static JpaAddressEmbeddable fromDomain(Address address) {
         if (address == null) {
             return null;
         }
-        return new JpaAddressEntity(
-                address.getAddressId(),
+        return new JpaAddressEmbeddable(
                 address.getStreet(),
                 address.getStreetNumber(),
                 address.getCity(),
@@ -57,14 +40,12 @@ public class JpaAddressEntity {
     }
 
     public Address toDomain() {
-        Address address = new Address(
+        return new Address(
                 city,
                 streetNumber,
                 street,
                 postalCode,
                 country
         );
-        address.setAddressId(addressId);
-        return address;
     }
 }
