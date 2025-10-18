@@ -34,12 +34,14 @@ public class OrderService {
     private final RestaurantCatalog restaurantCatalog;
     private final RabbitTemplate rabbitTemplate;
     private final ClientService clientService;
+    private final MollieService mollieService;
 
-    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate, ClientService clientService) {
+    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate, ClientService clientService, MollieService mollieService) {
         this.orderRepository = orderRepository;
         this.restaurantCatalog = restaurantCatalog;
         this.rabbitTemplate = rabbitTemplate;
         this.clientService = clientService;
+        this.mollieService = mollieService;
     }
 
     public Order getOrderById(OrderId orderId) {
@@ -89,6 +91,16 @@ public class OrderService {
 
         clientService.saveOrUpdateClient(clientId, orderInformation);
 
+        BigDecimal totalPrice = order.calculateTotalPrice();
+
+        boolean paymentSuccess = mollieService.simulatePayment(
+                totalPrice,
+                "Bestelling bij restaurant " + order.getRestaurantId().id()
+        );
+
+        if (!paymentSuccess) {
+            throw new RuntimeException("Betaling mislukt");
+        }
         order.place();
 
         this.orderRepository.save(order);

@@ -39,6 +39,8 @@ dependencies {
     implementation("org.jspecify:jspecify:1.0.0")
     implementation("org.postgresql:postgresql")
 
+    implementation("be.woutschoovaerts:mollie:4.6.2")
+
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
