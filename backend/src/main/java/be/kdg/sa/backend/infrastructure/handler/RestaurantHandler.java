@@ -39,4 +39,8 @@ public class RestaurantHandler {
     public void receiveDeliveredDeliveryResponse(RestaurantResponse msg) {
         orderService.orderDeliverd(msg);
     }
+    @RabbitListener(queues = RabbitMQTopology.DELIVERD_QUEUE_NAME)
+    public void receiveClaimedDeliveryResponse(RestaurantResponse msg) {
+        orderService.orderClaimed(msg);
+    }
 }

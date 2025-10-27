@@ -97,6 +97,12 @@ public class Order {
 
         this.orderState=OrderState.DELIVERD;
     }
+    public void claimed() {
+        if(this.orderState != OrderState.ACCEPTED)
+            throw new  IllegalStateException("Order isnt accepted by restaurant yet");
+
+        this.orderState=OrderState.DELIVERD;
+    }
 
     public void denied(String msg) {
         if(this.orderState != OrderState.PLACED)

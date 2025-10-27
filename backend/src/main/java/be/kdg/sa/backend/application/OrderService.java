@@ -184,4 +184,13 @@ public class OrderService {
         order.deliverd();
         orderRepository.save(order);
     }
+    public void orderClaimed(RestaurantResponse msg) {
+        final OrderId orderId = new OrderId(msg.orderId());
+
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        order.claimed();
+        orderRepository.save(order);
+    }
 }
