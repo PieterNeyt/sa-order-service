@@ -2,6 +2,12 @@ import type {DishDto, OrderinformationDto} from "../presenter.ts";
 
 
 export function setupDishes() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const restaurantId = urlParams.get("id");
+    if (!restaurantId) {
+        console.error("Restaurant ID niet gevonden in URL parameters");
+        return;
+    }
     const orderLineButtons = document.querySelectorAll<HTMLButtonElement>(".add-btn");
     orderLineButtons.forEach(ol => {
 
@@ -11,7 +17,6 @@ export function setupDishes() {
             const orderId = document.getElementById("orderId") as HTMLInputElement
             const quantityInput = document.getElementById(`quantity-${dishId}`) as HTMLInputElement;
             const dish:DishDto = await getInfoOfDish(dishId)
-
             const orderLineDto: ShoppingCartItem = {
                 dishId: dishId,
                 price:dish.price,
@@ -19,7 +24,7 @@ export function setupDishes() {
                 name:dish.name,
                 preparationTime: dish.preparationTime
             }
-            const order:Order = await addNewOrderLine(orderId.value,dish.restaurantId, orderLineDto);
+            const order:Order = await addNewOrderLine(orderId.value,restaurantId, orderLineDto);
             if(order.orderId)
                 orderId.value = order.orderId
 
