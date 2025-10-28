@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderMessagePublisher implements IOrderMessagePublisher {
-    @Value("${rabbit.order.exchange}")
+    @Value("${rabbitmq.exchange.order}")
     private String ORDER_EXCHANGE_NAME;
     private final RabbitTemplate rabbitTemplate;
 

@@ -35,8 +35,6 @@ public class OrderService {
     private final MollieService mollieService;
     private final IOrderMessagePublisher orderMessageService;
 
-        @Value("${rabbitmq.exchange.order}")
-        private String ORDER_EXCHANGE_NAME;
 
     public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, ClientService clientService, MollieService mollieService, IOrderMessagePublisher orderMessageService) {
         this.orderRepository = orderRepository;
