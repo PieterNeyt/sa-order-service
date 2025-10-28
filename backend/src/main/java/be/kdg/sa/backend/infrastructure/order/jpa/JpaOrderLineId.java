@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Embeddable
 @Getter
-@Setter
 public class JpaOrderLineId {
     @Column(name = "order_id")
     private UUID orderId;

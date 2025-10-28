@@ -3,14 +3,12 @@ package be.kdg.sa.backend.infrastructure.order.jpa;
 import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @Table(name="orderLine")
 public class JpaOrderLineEntity {
     @EmbeddedId
@@ -51,5 +49,9 @@ public class JpaOrderLineEntity {
                 orderLine.getName(),
                 orderLine.getPreparationTime()
         );
+    }
+
+    public void changeOrder(JpaOrderEntity jpaOrderEntity) {
+        order = jpaOrderEntity;
     }
 }

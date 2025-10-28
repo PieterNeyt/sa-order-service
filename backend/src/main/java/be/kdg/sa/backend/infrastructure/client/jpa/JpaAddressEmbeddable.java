@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Embeddable
 @Getter
-@Setter
 public class JpaAddressEmbeddable {
     private String street;
     private String streetNumber;

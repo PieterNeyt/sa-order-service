@@ -4,14 +4,12 @@ import be.kdg.sa.backend.domain.client.Address;
 import be.kdg.sa.backend.domain.client.Client;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "clients")
 public class JpaClientEntity {
     @Id
@@ -81,7 +79,7 @@ public class JpaClientEntity {
                 lastName,
                 phoneNumber
         );
-        client.setClientId(clientId);
+        client.changeClientId(clientId);
         return client;
     }
 }

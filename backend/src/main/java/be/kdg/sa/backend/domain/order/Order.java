@@ -7,6 +7,7 @@ import be.kdg.sa.backend.domain.order.orderline.OrderLine;
 import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
 import lombok.Getter;
 import lombok.ToString;
+import org.jmolecules.ddd.annotation.AggregateRoot;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
 
 
 @Getter
+@AggregateRoot
 @ToString
 public class Order {
     private final OrderId orderId;

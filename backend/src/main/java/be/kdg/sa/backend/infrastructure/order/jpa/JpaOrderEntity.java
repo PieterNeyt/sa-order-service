@@ -5,7 +5,6 @@ import be.kdg.sa.backend.domain.order.*;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
 @Table(name="orders")
 public class JpaOrderEntity {
     @Id
@@ -78,6 +76,6 @@ public class JpaOrderEntity {
     }
     public void setLines(List<JpaOrderLineEntity> lines) {
         this.shoppingCart = lines;
-        this.shoppingCart.forEach(line -> line.setOrder(this));
+        this.shoppingCart.forEach(line -> line.changeOrder(this));
     }
 }
