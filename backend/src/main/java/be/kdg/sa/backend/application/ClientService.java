@@ -48,7 +48,7 @@ public class ClientService {
 
     private Client createNewClient(UUID clientId) {
         Client client = new Client(null, null, "", "", "", "");
-        client.setClientId(clientId);
+        client.changeClientId(clientId);
         return client;
     }
 }
