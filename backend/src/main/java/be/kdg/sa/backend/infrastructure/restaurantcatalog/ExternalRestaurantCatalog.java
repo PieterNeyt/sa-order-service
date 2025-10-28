@@ -3,7 +3,6 @@ package be.kdg.sa.backend.infrastructure.restaurantcatalog;
 import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
 import be.kdg.sa.backend.domain.order.RestaurantId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
-import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +13,6 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class ExternalRestaurantCatalog implements RestaurantCatalog {
@@ -26,15 +24,15 @@ public class ExternalRestaurantCatalog implements RestaurantCatalog {
 
 
     @Override
-    public Optional<List<AllRestaurant>>getRestaurants() {
+    public Optional<List<Restaurant>>getRestaurants() {
         try {
-            final List<AllRestaurantResponse> restaurants = restClient
+            final List<RestaurantResponse> restaurants = restClient
                     .get()
                     .uri("")
                     .retrieve()
                     .body(new ParameterizedTypeReference<>() {});
 
-            return Optional.ofNullable(restaurants.stream().map(AllRestaurant::from).toList());
+            return Optional.ofNullable(restaurants.stream().map(Restaurant::from).toList());
 
         } catch (final HttpStatusCodeException e) {
             return Optional.empty();

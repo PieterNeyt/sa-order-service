@@ -7,17 +7,12 @@ import be.kdg.sa.backend.domain.NotFoundException;
 import be.kdg.sa.backend.domain.client.ClientId;
 import be.kdg.sa.backend.domain.order.*;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
-import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
-import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
 import be.kdg.sa.backend.infrastructure.handler.OrderMessage;
 import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.NotFound;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,7 +110,7 @@ public class OrderService {
     }
 
 
-    public List<AllRestaurant> getRestaurants() {
+    public List<Restaurant> getRestaurants() {
         return restaurantCatalog.getRestaurants()
                 .orElseThrow(() -> new NotFoundException("Restaurants not found"));
     }

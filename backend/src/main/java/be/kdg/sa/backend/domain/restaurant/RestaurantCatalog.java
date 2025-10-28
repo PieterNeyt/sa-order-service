@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RestaurantCatalog {
-    Optional<List<AllRestaurant>> getRestaurants();
+    Optional<List<Restaurant>> getRestaurants();
 
     Optional<Restaurant> getRestaurantById(RestaurantId restaurantId);
 

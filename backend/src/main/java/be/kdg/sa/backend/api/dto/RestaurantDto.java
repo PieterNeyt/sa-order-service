@@ -8,12 +8,20 @@ import java.util.UUID;
 
 public record RestaurantDto(UUID id,
                          String name,
-                         List<DishDto> dishes
+                         List<DishDto> dishes,
+                            String restaurantType,
+                            boolean isOpen,
+                            String  priceCategory,
+                            String logo
 ) {
     public static RestaurantDto from(Restaurant restaurant) {
         return new RestaurantDto(restaurant.id(),
                 restaurant.name(),
-                restaurant.dishes().stream().map(DishDto::from).toList());
+                restaurant.dishes().stream().map(DishDto::from).toList(),
+                restaurant.restaurantType(),
+                restaurant.isOpen(),
+                restaurant.priceCategory(),
+                restaurant.logo());
     }
     public record DishDto(UUID id,
                           UUID restaurantId,

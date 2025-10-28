@@ -4,16 +4,31 @@ import be.kdg.sa.backend.infrastructure.restaurantcatalog.RestaurantResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public record Restaurant(UUID id,
                                  String name,
-                                 List<Dish> dishes
+                                 List<Dish> dishes,
+                         String restaurantType,
+                         boolean isOpen,
+                         String priceCategory,
+                         String logo
 ) {
     public static Restaurant from(RestaurantResponse restaurantResponse) {
+        List<Dish> dishes = Optional.ofNullable(restaurantResponse.dishes())
+                .orElse(List.of())
+                .stream()
+                .map(Dish::from)
+                .toList();
+
         return new Restaurant(restaurantResponse.id(),
                 restaurantResponse.name(),
-                restaurantResponse.dishes().stream().map(Dish::from).toList());
+                dishes,
+                restaurantResponse.restaurantType(),
+                restaurantResponse.isOpen(),
+                restaurantResponse.priceCategory(),
+                restaurantResponse.logo());
     }
     public record Dish(UUID id,
                                UUID RestaurantId,

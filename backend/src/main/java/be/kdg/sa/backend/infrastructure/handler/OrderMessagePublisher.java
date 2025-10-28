@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 public class OrderMessagePublisher implements IOrderMessagePublisher {
     @Value("${rabbitmq.exchange.order}")
     private String ORDER_EXCHANGE_NAME;
+    @Value("${rabbitmq.exchange.order.place.routing.key}")
+    private String ORDER_PLACE_ROUTING_KEY_NAME;
     private final RabbitTemplate rabbitTemplate;
 
     public OrderMessagePublisher(RabbitTemplate rabbitTemplate) {
@@ -21,7 +23,7 @@ public class OrderMessagePublisher implements IOrderMessagePublisher {
     public void placeOrder(OrderMessage orderMessage) {
         this.rabbitTemplate.convertAndSend(
                 ORDER_EXCHANGE_NAME,
-                "order.place." + orderMessage.id(),
+                ORDER_PLACE_ROUTING_KEY_NAME + orderMessage.id(),
                 orderMessage
         );
     }

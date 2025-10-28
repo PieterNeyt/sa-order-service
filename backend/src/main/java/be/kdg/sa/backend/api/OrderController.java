@@ -7,11 +7,9 @@ import be.kdg.sa.backend.domain.order.Order;
 import be.kdg.sa.backend.domain.order.OrderId;
 import be.kdg.sa.backend.domain.order.RestaurantId;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
-import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -83,9 +81,9 @@ public class OrderController {
     }
 
     @GetMapping("/restaurants")
-    public ResponseEntity<List<GetAllRestaurantDto>> getRestaurants() {
-       List<AllRestaurant> restaurants = orderService.getRestaurants();
-       return ResponseEntity.ok(restaurants.stream().map(GetAllRestaurantDto::from).toList());
+    public ResponseEntity<List<RestaurantDto>> getRestaurants() {
+       List<Restaurant> restaurants = orderService.getRestaurants();
+       return ResponseEntity.ok(restaurants.stream().map(RestaurantDto::from).toList());
     }
     @GetMapping("/{restaurantId}/dishes")
     public ResponseEntity<RestaurantDto> getDishes(@PathVariable("restaurantId") UUID restaurantId) {

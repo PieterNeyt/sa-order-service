@@ -22,8 +22,8 @@ async function handleLogin(): Promise<void> {
     try {
         const params = new URLSearchParams({
             client_id: 'backend-client',
-           client_secret: 'NHhC580gogEpJ5K9fqsiyLiqF4VpqTKE',//Pieter
-          // client_secret:'pBAtElyMTHBp0IBEwO8G8h7bt6Jb4khZ',//Hugo
+          // client_secret: 'NHhC580gogEpJ5K9fqsiyLiqF4VpqTKE',//Pieter
+           client_secret:'pBAtElyMTHBp0IBEwO8G8h7bt6Jb4khZ',//Hugo
             username: 'client',
             password: 'password',
             grant_type: 'password',

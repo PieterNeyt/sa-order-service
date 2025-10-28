@@ -1,5 +1,6 @@
 package be.kdg.sa.backend.domain.order.orderline;
 
+import be.kdg.sa.backend.domain.ActionNotPossibleException;
 import lombok.Getter;
 import org.jmolecules.ddd.annotation.Entity;
 import org.jmolecules.ddd.annotation.Identity;
@@ -49,7 +50,7 @@ public class OrderLine {
 
     public void addQuantity(int quantity) {
         if(quantity <= 0)
-            throw new IllegalArgumentException("quantity must be greater than 0");
+            throw new ActionNotPossibleException("quantity must be greater than 0");
         this.quantity += quantity;
     }
 }
