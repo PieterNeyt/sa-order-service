@@ -5,15 +5,13 @@ import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
 import be.kdg.sa.backend.api.dto.OrderInformationDto;
 import be.kdg.sa.backend.domain.NotFoundException;
 import be.kdg.sa.backend.domain.client.ClientId;
-import be.kdg.sa.backend.domain.order.OrderId;
+import be.kdg.sa.backend.domain.order.*;
 import be.kdg.sa.backend.domain.order.orderline.DishId;
-import be.kdg.sa.backend.domain.order.Order;
-import be.kdg.sa.backend.domain.order.OrderRepository;
-import be.kdg.sa.backend.domain.order.RestaurantId;
 import be.kdg.sa.backend.domain.restaurant.AllRestaurant;
 import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import be.kdg.sa.backend.infrastructure.config.RabbitMQTopology;
+import be.kdg.sa.backend.infrastructure.handler.OrderMessage;
 import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import lombok.extern.slf4j.Slf4j;
@@ -27,25 +25,25 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-    @Service
-    @Transactional
-    @Slf4j
-    public class OrderService {
-        private final OrderRepository orderRepository;
-        private final RestaurantCatalog restaurantCatalog;
-        private final RabbitTemplate rabbitTemplate;
-        private final ClientService clientService;
-        private final MollieService mollieService;
+@Service
+@Transactional
+@Slf4j
+public class OrderService {
+    private final OrderRepository orderRepository;
+    private final RestaurantCatalog restaurantCatalog;
+    private final ClientService clientService;
+    private final MollieService mollieService;
+    private final IOrderMessagePublisher orderMessageService;
 
         @Value("${rabbitmq.exchange.order}")
         private String ORDER_EXCHANGE_NAME;
 
-    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate, ClientService clientService, MollieService mollieService) {
+    public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, ClientService clientService, MollieService mollieService, IOrderMessagePublisher orderMessageService) {
         this.orderRepository = orderRepository;
         this.restaurantCatalog = restaurantCatalog;
-        this.rabbitTemplate = rabbitTemplate;
         this.clientService = clientService;
         this.mollieService = mollieService;
+        this.orderMessageService = orderMessageService;
     }
 
     public Order getOrderById(OrderId orderId) {
@@ -108,14 +106,13 @@ import java.util.UUID;
         order.place();
 
         this.orderRepository.save(order);
-        this.rabbitTemplate.convertAndSend(
-                ORDER_EXCHANGE_NAME,
-                "order.place." + order.getOrderId().id(),
-                new OrderMessage(order.getOrderId().id(),
+        this.orderMessageService.placeOrder(
+                new OrderMessage(
+                        order.getOrderId().id(),
                         order.getRestaurantId().id(),
-                        order.calculateTotalPrice())
-        );
-
+                        order.calculateTotalPrice(),
+                        OrderMessage.DishMessage.fromDomain(order.getShoppingCart())
+                ));
         return order;
     }
 
@@ -188,6 +185,7 @@ import java.util.UUID;
         order.deliverd();
         orderRepository.save(order);
     }
+
     public void orderClaimed(RestaurantResponse msg) {
         final OrderId orderId = new OrderId(msg.orderId());
 
