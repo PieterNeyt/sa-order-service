@@ -33,7 +33,6 @@ public class OrderController {
         return UUID.fromString(token.getClaimAsString("sub"));
     }
 
-    @PreAuthorize("hasAuthority('client')")
     @PostMapping("/{orderId}/shoppingCart/{restaurantId}")
     public ResponseEntity<OrderDto> addDishToShoppingCart(@PathVariable("orderId") UUID orderId,
                                                           @PathVariable("restaurantId") UUID restaurantId,
@@ -71,7 +70,7 @@ public class OrderController {
         return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
     }
 
-    @PreAuthorize("hasAuthority('client')")
+
     @PatchMapping("/{orderId}/placeOrder")
     public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(
             @PathVariable UUID orderId,

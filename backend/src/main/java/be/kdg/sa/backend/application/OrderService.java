@@ -19,6 +19,7 @@ import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.NotFound;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +27,18 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@Transactional
-@Slf4j
-public class OrderService {
-    private final OrderRepository orderRepository;
-    private final RestaurantCatalog restaurantCatalog;
-    private final RabbitTemplate rabbitTemplate;
-    private final ClientService clientService;
-    private final MollieService mollieService;
+    @Service
+    @Transactional
+    @Slf4j
+    public class OrderService {
+        private final OrderRepository orderRepository;
+        private final RestaurantCatalog restaurantCatalog;
+        private final RabbitTemplate rabbitTemplate;
+        private final ClientService clientService;
+        private final MollieService mollieService;
+
+        @Value("${rabbitmq.exchange.order}")
+        private String ORDER_EXCHANGE_NAME;
 
     public OrderService(OrderRepository orderRepository, RestaurantCatalog restaurantCatalog, RabbitTemplate rabbitTemplate, ClientService clientService, MollieService mollieService) {
         this.orderRepository = orderRepository;
@@ -99,13 +103,13 @@ public class OrderService {
         );
 
         if (!paymentSuccess) {
-            throw new RuntimeException("Betaling mislukt");
+            throw new RuntimeException("Payment failed");
         }
         order.place();
 
         this.orderRepository.save(order);
         this.rabbitTemplate.convertAndSend(
-                RabbitMQTopology.ORDER_EXCHANGE_NAME,
+                ORDER_EXCHANGE_NAME,
                 "order.place." + order.getOrderId().id(),
                 new OrderMessage(order.getOrderId().id(),
                         order.getRestaurantId().id(),
@@ -118,7 +122,7 @@ public class OrderService {
 
     public List<AllRestaurant> getRestaurants() {
         return restaurantCatalog.getRestaurants()
-                .orElseThrow(() -> new NotFoundException("Restaurants niet gevonden"));
+                .orElseThrow(() -> new NotFoundException("Restaurants not found"));
     }
 
     public Restaurant getRestaurantWithDishes(RestaurantId restaurantId) {

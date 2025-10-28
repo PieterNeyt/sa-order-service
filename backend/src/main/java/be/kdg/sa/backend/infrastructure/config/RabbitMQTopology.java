@@ -1,21 +1,50 @@
 package be.kdg.sa.backend.infrastructure.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQTopology {
-    public static final String ORDER_EXCHANGE_NAME = "order-exchange";
-    public static final String RESTAURANT_RESPONSE_EXCHANGE_NAME = "restaurant-response-exchange";
-    public static final String DELIVERY_RESPONSE_EXCHANGE_NAME = "delivery-response-exchange";
+    @Value("${rabbitmq.exchange.order}")
+    private String ORDER_EXCHANGE_NAME;
 
-    public static final String ORDER_ACCEPT_QUEUE = "order-accept-queue";
-    public static final String ORDER_DENY_QUEUE = "order-deny-queue";
-    public static final String ORDER_READY_QUEUE = "order-ready-queue";
+    @Value("${rabbitmq.exchange.restaurant-response}")
+    private String RESTAURANT_RESPONSE_EXCHANGE_NAME;
 
-    public static final String PICKEDUP_QUEUE_NAME = "pickedup-response-queue";
-    public static final String DELIVERD_QUEUE_NAME = "deliverd-response-queue";
+    @Value("${rabbitmq.exchange.delivery-response}")
+    private String DELIVERY_RESPONSE_EXCHANGE_NAME;
+
+    @Value("${rabbitmq.queue.order-accept}")
+    private String ORDER_ACCEPT_QUEUE;
+
+    @Value("${rabbitmq.queue.order-deny}")
+    private String ORDER_DENY_QUEUE;
+
+    @Value("${rabbitmq.queue.order-ready}")
+    private String ORDER_READY_QUEUE;
+
+    @Value("${rabbitmq.queue.pickedup}")
+    private String PICKEDUP_QUEUE_NAME;
+
+    @Value("${rabbitmq.queue.deliverd}")
+    private String DELIVERD_QUEUE_NAME;
+
+    @Value("${rabbitmq.routing-key.order-accept}")
+    private String ORDER_ACCEPT_ROUTING_KEY;
+
+    @Value("${rabbitmq.routing-key.order-deny}")
+    private String ORDER_DENY_ROUTING_KEY;
+
+    @Value("${rabbitmq.routing-key.order-ready}")
+    private String ORDER_READY_ROUTING_KEY;
+
+    @Value("${rabbitmq.routing-key.order-pickedup}")
+    private String ORDER_PICKEDUP_ROUTING_KEY;
+
+    @Value("${rabbitmq.routing-key.order-deliverd}")
+    private String ORDER_DELIVERD_ROUTING_KEY;
 
     //sturen van msg naar restaurant service
     @Bean
@@ -70,33 +99,33 @@ public class RabbitMQTopology {
     Binding acceptQueueBinding() {
         return BindingBuilder.bind(orderAcceptResponseQueue())
                 .to(restaurantResponseExchange())
-                .with("order.accept.*");
+                .with(ORDER_ACCEPT_ROUTING_KEY);
     }
 
     @Bean
     Binding denyQueueBinding() {
         return BindingBuilder.bind(orderDeneidResponseQueue())
                 .to(restaurantResponseExchange())
-                .with("order.deny.*");
+                .with(ORDER_DENY_ROUTING_KEY);
     }
 
     @Bean
     Binding readyQueueBinding() {
         return BindingBuilder.bind(orderReadyResponseQueue())
                 .to(restaurantResponseExchange())
-                .with("order.ready.*");
+                .with(ORDER_READY_ROUTING_KEY);
     }
 
     @Bean
     Binding pickedUpQueueBinding() {
         return BindingBuilder.bind(deliveryPickedupResponseQueue())
                 .to(deliveryResponseExchange())
-                .with("order.pickedup.*");
+                .with(ORDER_PICKEDUP_ROUTING_KEY);
     }@Bean
     Binding deliverdQueueBinding() {
         return BindingBuilder.bind(deliveryDeliverdResponseQueue())
                 .to(deliveryResponseExchange())
-                .with("order.deliverd.*");
+                .with(ORDER_DELIVERD_ROUTING_KEY);
     }
 }
 

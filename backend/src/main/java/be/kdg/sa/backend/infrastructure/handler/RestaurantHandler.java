@@ -16,30 +16,30 @@ public class RestaurantHandler {
         this.orderService = orderService;
     }
 
-    @RabbitListener(queues = RabbitMQTopology.ORDER_ACCEPT_QUEUE)
+    @RabbitListener(queues = "${rabbitmq.queue.order-accept}")
     public void receiveAccepterOrderResponse(RestaurantResponse msg) {
         orderService.orderAccepted(msg);
     }
 
-    @RabbitListener(queues = RabbitMQTopology.ORDER_DENY_QUEUE)
+    @RabbitListener(queues = "${rabbitmq.queue.order-deny}")
     public void receiveDeniedOrderResponse(RestaurantResponse msg) {
         orderService.orderDenied(msg);
     }
 
-    @RabbitListener(queues = RabbitMQTopology.ORDER_READY_QUEUE)
+    @RabbitListener(queues = "${rabbitmq.queue.order-deny}")
     public void receiveReadyOrderResponse(RestaurantResponse msg) {
         orderService.orderReady(msg);
     }
 
-    @RabbitListener(queues = RabbitMQTopology.PICKEDUP_QUEUE_NAME)
+    @RabbitListener(queues = "${rabbitmq.queue.pickedup}")
     public void receivePickedUpDeliveryResponse(RestaurantResponse msg) {
         orderService.orderPickedUp(msg);
     }
-    @RabbitListener(queues = RabbitMQTopology.DELIVERD_QUEUE_NAME)
+    @RabbitListener(queues = "${rabbitmq.queue.deliverd}")
     public void receiveDeliveredDeliveryResponse(RestaurantResponse msg) {
         orderService.orderDeliverd(msg);
     }
-    @RabbitListener(queues = RabbitMQTopology.DELIVERD_QUEUE_NAME)
+    @RabbitListener(queues = "${rabbitmq.queue.deliverd}")
     public void receiveClaimedDeliveryResponse(RestaurantResponse msg) {
         orderService.orderClaimed(msg);
     }
