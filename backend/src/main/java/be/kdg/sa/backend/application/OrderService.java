@@ -1,8 +1,8 @@
 package be.kdg.sa.backend.application;
 
 
-import be.kdg.sa.backend.api.dto.CheckoutResponseDto;
-import be.kdg.sa.backend.api.dto.OrderInformationDto;
+import be.kdg.sa.backend.api.dto.*;
+import be.kdg.sa.backend.domain.ActionNotPossibleException;
 import be.kdg.sa.backend.domain.NotFoundException;
 import be.kdg.sa.backend.domain.client.ClientId;
 import be.kdg.sa.backend.domain.order.*;
@@ -11,6 +11,7 @@ import be.kdg.sa.backend.domain.restaurant.Restaurant;
 import be.kdg.sa.backend.domain.restaurant.RestaurantCatalog;
 import be.kdg.sa.backend.infrastructure.handler.OrderMessage;
 import be.kdg.sa.backend.infrastructure.handler.RestaurantResponse;
+import be.kdg.sa.backend.infrastructure.mollie.MollieService;
 import be.kdg.sa.backend.infrastructure.restaurantcatalog.CheckoutDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RestaurantCatalog restaurantCatalog;
     private final ClientService clientService;
-    private final MollieService mollieService;
+    private final IMollieService mollieService;
     private final IOrderMessagePublisher orderMessageService;
 
 
@@ -75,27 +76,37 @@ public class OrderService {
                 .orElseThrow(orderId::notFound);
     }
 
-    public Order placeOrder(OrderId orderId, OrderInformationDto orderInformation, UUID clientId) {
 
+    public PaymentDto preparePayment(OrderId orderId, OrderInformationDto orderInformation, UUID clientId) {
         final Order order = this.orderRepository.findById(orderId)
                 .orElseThrow(orderId::notFound);
 
-        restaurantCatalog.checkShoppingCart(
-                CheckoutDto.fromOrderDomain(order)
-        );
-
-        clientService.saveOrUpdateClient(clientId, orderInformation);
-
-        BigDecimal totalPrice = order.calculateTotalPrice();
-
-        boolean paymentSuccess = mollieService.simulatePayment(
-                totalPrice,
-                "Bestelling bij restaurant " + order.getRestaurantId().id()
-        );
-
-        if (!paymentSuccess) {
-            throw new RuntimeException("Payment failed");
+        if (order.getOrderState() != OrderState.NOT_PLACED) {
+            throw new ActionNotPossibleException("Order already placed");
         }
+
+        restaurantCatalog.checkShoppingCart(CheckoutDto.fromOrderDomain(order));
+        clientService.ensureClientHasAddress(clientId, orderInformation);
+
+        PaymentCreationDto paymentResult = mollieService.createPayment(order.calculateTotalPrice(), "Bestelling bij restaurant " + order.getRestaurantId().id(), orderId.id());
+
+        order.assignPaymentId(paymentResult.paymentId());
+        orderRepository.save(order);
+
+        return new PaymentDto(paymentResult.paymentUrl(), orderId.id());
+    }
+
+
+    public void confirmOrder(OrderId orderId) {
+        final Order order = this.orderRepository.findById(orderId)
+                .orElseThrow(orderId::notFound);
+
+        boolean paymentSuccessful = mollieService.verifyPayment(order.getPaymentId());
+
+        if (!paymentSuccessful) {
+            throw new RuntimeException("Payment not successful");
+        }
+
         order.place();
 
         this.orderRepository.save(order);
@@ -106,7 +117,6 @@ public class OrderService {
                         order.calculateTotalPrice(),
                         OrderMessage.DishMessage.fromDomain(order.getShoppingCart())
                 ));
-        return order;
     }
 
 

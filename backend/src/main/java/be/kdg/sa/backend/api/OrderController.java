@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -79,16 +80,27 @@ public class OrderController {
     }
 
 
-    @PatchMapping("/{orderId}/placeOrder")
-    public ResponseEntity<List<OrderDto.OrderLineDto>> placeOrder(
+    @PostMapping("/{orderId}/prepare-payment")
+    public ResponseEntity<PaymentDto> preparePayment(
             @PathVariable UUID orderId,
             @RequestParam UUID clientId,
             @RequestBody OrderInformationDto orderInformation) {
 
-        Order order = orderService.placeOrder(new OrderId(orderId), orderInformation, clientId);
-        return ResponseEntity.ok(OrderDto.from(order).shoppingCart());
+        PaymentDto paymentDto = orderService.preparePayment(
+                new OrderId(orderId),
+                orderInformation,
+                clientId
+        );
+        return ResponseEntity.ok(paymentDto);
     }
 
+    @PostMapping("/{orderId}/confirm")
+    public ResponseEntity<Void> confirmOrder(
+            @PathVariable UUID orderId) {
+
+        orderService.confirmOrder(new OrderId(orderId));
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/restaurants")
     public ResponseEntity<List<RestaurantDto>> getRestaurants() {

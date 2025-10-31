@@ -1,4 +1,4 @@
-package be.kdg.sa.backend.application;
+package be.kdg.sa.backend.infrastructure.mollie;
 
 import be.woutschoovaerts.mollie.Client;
 import org.springframework.beans.factory.annotation.Value;

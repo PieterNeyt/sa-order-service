@@ -21,20 +21,10 @@ public class ClientService {
     }
 
 
-    public void saveOrUpdateClient(UUID clientId, OrderInformationDto orderInformation) {
+    public void ensureClientHasAddress(UUID clientId, OrderInformationDto orderInformation) {
 
-        String[] nameParts = orderInformation.name().trim().split(" ", 2);
-        String firstName = nameParts[0];
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
-        // Zoek bestaande client of maak nieuwe
         Client client = clientRepository.findById(clientId)
                 .orElse(createNewClient(clientId));
-
-        //:TODO client aanpassen
-    /*    client.setFirstName(firstName);
-        client.setLastName(lastName);
-        client.setEmail(orderInformation.email());
 
         Address address = new Address(
                 orderInformation.city(),
@@ -43,8 +33,7 @@ public class ClientService {
                 orderInformation.postalcode(),
                 "Belgium"
         );
-        client.setAddress(address);*/
-
+        client.assignAddress(address);
         clientRepository.save(client);
     }
 

@@ -24,6 +24,7 @@ public class Order {
     private final RestaurantId restaurantId;
     private OrderState orderState;
     private String rejectionMessage;
+    private String paymentId;
     private final List<OrderLine> shoppingCart = new ArrayList<>();
 
 
@@ -35,13 +36,14 @@ public class Order {
         this.orderState = OrderState.NOT_PLACED;
     }
 
-    public Order(OrderId orderId, RestaurantId restaurantId, ClientId clientId, OrderState orderState,String rejectionMessage) {
+    public Order(OrderId orderId, RestaurantId restaurantId, ClientId clientId, OrderState orderState,String rejectionMessage, String paymentId) {
         this.orderState = orderState;
         Assert.notNull(restaurantId, "restaurantId must not be null");
         this.restaurantId = restaurantId;
         this.orderId = orderId;
         this.clientId = clientId;
         this.rejectionMessage = rejectionMessage;
+        this.paymentId = paymentId;
     }
 
 
@@ -58,7 +60,12 @@ public class Order {
                 () -> shoppingCart.add(new OrderLine(dishId,price,quantity,name,preparationTime))
         );
     }
-
+    public void assignPaymentId(String paymentId) {
+        if (this.paymentId != null) {
+            throw new ActionNotPossibleException("Payment ID is already assigned");
+        }
+        this.paymentId = paymentId;
+    }
 
     public void place() {
         if(this.orderState != OrderState.NOT_PLACED)

@@ -35,4 +35,7 @@ public class Client {
     public void changeClientId(UUID clientId) {
         this.clientId = clientId;
     }
+    public void assignAddress(Address address) {
+        this.address = address;
+    }
 }

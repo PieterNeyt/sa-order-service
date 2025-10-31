@@ -146,7 +146,25 @@ export async function checkout(orderId: string, orderInformationDto: Orderinform
     return await response.json();
 }
 
+export async function preparePayment(orderId: string, orderInformationDto: OrderinformationDto) {
+    const clientId = sessionStorage.getItem("client_id");
 
+    if (!clientId) {
+        throw new Error("Geen gebruiker gevonden. Log eerst in.");
+    }
+
+    const response = await fetch(`http://localhost:9090/api/order/${orderId}/prepare-payment?clientId=${clientId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderInformationDto)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Fout bij voorbereiden betaling: ${response.status}`);
+    }
+
+    return await response.json();
+}
 
 
 

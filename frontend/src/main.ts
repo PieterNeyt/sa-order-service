@@ -1,7 +1,7 @@
 import "./css/style.css"
 import "./css/restaurant.css"
 import {type OrderinformationDto, showDishes, showRestaurants} from "./ts/presenter.ts";
-import {checkout, prepareCheckout} from "./ts/domain/OrderLine.ts";
+import {prepareCheckout, preparePayment} from "./ts/domain/OrderLine.ts";
 import {initNavbar} from "./ts/navbarLoader.ts";
 
 initNavbar()
@@ -34,35 +34,31 @@ if (checkoutBtn) {
     checkoutBtn.addEventListener("click", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get("orderId");
-        const restaurantId = urlParams.get("restaurantId");
+
         if (!orderId) {
             alert("Geen order ID gevonden.");
             return;
         }
-        if (!restaurantId) {
-            alert("Geen restaurantId gevonden.");
-            return;
-        }
-        // Inputwaarden ophalen
+
         const name = (document.getElementById("name") as HTMLInputElement).value;
         const email = (document.getElementById("email") as HTMLInputElement).value;
         const street = (document.getElementById("street") as HTMLInputElement).value;
         const postalcode = (document.getElementById("postalcode") as HTMLInputElement).value;
         const city = (document.getElementById("city") as HTMLInputElement).value;
 
-        // OrderinformationDto vullen
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
 
-
         try {
-            const result = await checkout(orderId,orderinformationDto);
-            console.log("Checkout successful:", result);
-            window.location.href = `orderTracking.html?orderId=${encodeURIComponent(orderId)}`;
+            // AANGEPAST: gebruik preparePayment in plaats van checkout
+            const result = await preparePayment(orderId, orderinformationDto);
+            console.log("Payment preparation successful:", result);
 
+            // Redirect naar Mollie betaalpagina
+            window.location.href = result.paymentUrl;
 
         } catch (error) {
-            console.error("Checkout failed:", error);
-            alert(`Checkout mislukt`);
+            console.error("Payment preparation failed:", error);
+            alert("Betaling voorbereiden mislukt");
         }
     });
 }
