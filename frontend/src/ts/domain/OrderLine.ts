@@ -59,33 +59,26 @@ function addToWinkelMandje(order: Order) {
         .join('');
     shoppingCart.innerHTML=html
 }
+export async function addNewOrderLine(
+    orderId: string,
+    restaurantId: string,
+    orderLine: ShoppingCartItem
+) {
+    const clientId = sessionStorage.getItem("client_id");
 
-export async function addNewOrderLine(orderId: string, restaurantId: string, orderLine: ShoppingCartItem) {
-    console.log(restaurantId);
-
-    // Haal JWT token op uit sessionStorage
-    const token = sessionStorage.getItem('jwt_token');
-
-    if (!token) {
-        alert('Niet ingelogd! Log eerst in.');
-        throw new Error('Niet ingelogd! Log eerst in.');
+    if (!clientId) {
+        alert("Geen gebruiker gevonden. Log eerst in.");
+        throw new Error("Geen gebruiker gevonden. Log eerst in.");
     }
 
-    const response = await fetch(`http://localhost:9090/api/order/${orderId}/shoppingCart/${restaurantId}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(orderLine)
-    });
-
-    if (response.status === 401) {
-        // Token is verlopen of ongeldig
-        sessionStorage.removeItem('jwt_token');
-        alert('Sessie verlopen. Log opnieuw in.');
-        throw new Error('Sessie verlopen. Log opnieuw in.');
-    }
+    const response = await fetch(
+        `http://localhost:9090/api/order/${orderId}/shoppingCart/${restaurantId}?clientId=${clientId}`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderLine),
+        }
+    );
 
     if (!response.ok) {
         alert(`HTTP error! Status: ${response.status}`);
@@ -95,6 +88,7 @@ export async function addNewOrderLine(orderId: string, restaurantId: string, ord
     const data: Order = await response.json();
     return data;
 }
+
 
 export async function prepareCheckout(orderId: string, restaurantId: string) {
 
@@ -132,24 +126,24 @@ export async function prepareCheckout(orderId: string, restaurantId: string) {
 }
 
 
-export async function checkout(orderId: string, orderinformationDto: OrderinformationDto) {
-    const jwttoken = sessionStorage.getItem("jwt_token")
+export async function checkout(orderId: string, orderInformationDto: OrderinformationDto) {
+    const clientId = sessionStorage.getItem("client_id");
 
-    if(!jwttoken)
-        throw new Error('Log in')
+    if (!clientId) {
+        throw new Error("Geen gebruiker gevonden. Log eerst in.");
+    }
 
-    const updateOrderState = await fetch(`http://localhost:9090/api/order/${orderId}/placeOrder`, {
+    const response = await fetch(`http://localhost:9090/api/order/${orderId}/placeOrder?clientId=${clientId}`, {
         method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${jwttoken}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(orderinformationDto)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderInformationDto)
     });
 
-    if (!updateOrderState.ok) {
-        throw new Error(`Fout bij updaten van orderstatus: ${updateOrderState.status}`);
+    if (!response.ok) {
+        throw new Error(`Fout bij plaatsen van bestelling: ${response.status}`);
     }
+
+    return await response.json();
 }
 
 

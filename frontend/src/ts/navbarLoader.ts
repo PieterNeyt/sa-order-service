@@ -6,12 +6,12 @@ function initLoginButton(): void {
     const loginBtn = document.getElementById('login-btn');
     if (loginBtn) {
         loginBtn.addEventListener('click', handleLoginLogout);
-        updateLoginButton(); // zet meteen de juiste status bij refresh
+        updateLoginButton();
     }
 }
 
 function handleLoginLogout(): void {
-    if (sessionStorage.getItem('jwt_token')) {
+    if (sessionStorage.getItem('client_id')) {
         handleLogout();
     } else {
         handleLogin();
@@ -20,45 +20,33 @@ function handleLoginLogout(): void {
 
 async function handleLogin(): Promise<void> {
     try {
-        const params = new URLSearchParams({
-            client_id: 'backend-client',
-          // client_secret: 'NHhC580gogEpJ5K9fqsiyLiqF4VpqTKE',//Pieter
-           client_secret:'pBAtElyMTHBp0IBEwO8G8h7bt6Jb4khZ',//Hugo
-            username: 'client',
-            password: 'password',
-            grant_type: 'password',
-            scope: 'openid'
+        const response = await fetch("http://localhost:9090/api/order/login", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
         });
 
-        const response = await fetch('http://localhost:8180/realms/keepdishesgoing/protocol/openid-connect/token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString()
-        });
+        if (!response.ok) {
+            alert("Login mislukt!");
+            return;
+        }
 
-        if (!response.ok) throw new Error('Login failed');
+        const user = await response.json();
 
-        const data = await response.json();
-        sessionStorage.setItem('jwt_token', data.access_token);
+        sessionStorage.setItem("client_id", user.id);
 
-        console.log('Succesvol ingelogd!');
-        console.log('JWT Token:', data.access_token);
-
-        alert('Login successful!');
+        console.log("Ingelogd als:", user);
+        alert(`Welkom ${user.firstName}!`);
         updateLoginButton();
     } catch (error) {
-        console.error('Login error:', error);
-        alert('Login failed');
+        console.error("Fout bij login:", error);
+        alert("Er is een fout opgetreden bij het inloggen.");
     }
 }
 
 function handleLogout(): void {
-    const token = sessionStorage.getItem('jwt_token');
-    sessionStorage.removeItem('jwt_token');
+    sessionStorage.removeItem('client_id');
 
     console.log('Succesvol uitgelogd!');
-    console.log('Verwijderde JWT Token:', token);
-
     alert('Succesvol uitgelogd!');
     updateLoginButton();
 }
@@ -67,9 +55,9 @@ function updateLoginButton(): void {
     const loginBtn = document.getElementById('login-btn');
     if (!loginBtn) return;
 
-    if (sessionStorage.getItem('jwt_token')) {
-        loginBtn.textContent = 'Uitloggen';
-    } else {
-        loginBtn.textContent = 'Inloggen';
-    }
+    const isLoggedIn = sessionStorage.getItem('client_id');
+
+    loginBtn.textContent = isLoggedIn
+        ? `Uitloggen`
+        : 'Inloggen';
 }

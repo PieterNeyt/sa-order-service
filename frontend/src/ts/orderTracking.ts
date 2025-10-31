@@ -1,16 +1,15 @@
 import type {Order} from "./domain/OrderLine.ts";
 
 async function getOrderTracking(orderId: string): Promise<Order> {
-    const jwtToken = sessionStorage.getItem("jwt_token");
+    const clientId = sessionStorage.getItem("client_id");
 
-    if (!jwtToken) {
-        throw new Error('Je moet ingelogd zijn');
+    if (!clientId) {
+        throw new Error("Geen gebruiker gevonden. Log eerst in.");
     }
 
-    const response = await fetch(`http://localhost:9090/api/order/${orderId}`, {
+    const response = await fetch(`http://localhost:9090/api/order/${orderId}?clientId=${clientId}`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${jwtToken}`,
             "Content-Type": "application/json"
         }
     });
@@ -21,6 +20,7 @@ async function getOrderTracking(orderId: string): Promise<Order> {
 
     return await response.json();
 }
+
 
 function formatPrice(price: number): string {
     return new Intl.NumberFormat('nl-BE', {
