@@ -49,7 +49,6 @@ if (checkoutBtn) {
         const orderinformationDto: OrderinformationDto = { name, email, street, postalcode, city };
 
         try {
-            // AANGEPAST: gebruik preparePayment in plaats van checkout
             const result = await preparePayment(orderId, orderinformationDto);
             console.log("Payment preparation successful:", result);
 
