@@ -26,7 +26,7 @@ public class RestaurantHandler {
         orderService.orderDenied(msg);
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.order-deny}")
+    @RabbitListener(queues = "${rabbitmq.queue.order-ready}")
     public void receiveReadyOrderResponse(RestaurantResponse msg) {
         orderService.orderReady(msg);
     }
